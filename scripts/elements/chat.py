@@ -24,7 +24,7 @@ def renderChat(element):
             x = 0
             # Render icon
             if row[0] is not None:
-                icon = pygame.image.load('projects/' + c.project_name + '/images/' + row[0] + '.png')
+                icon = c.image_store.get_image('projects/' + c.project_name + '/images/' + row[0] + '.png')
                 icon = scale_image(icon,50)
                 c.images_used.append(row[0] + '.png')
                 img.blit(icon,(0,y+8))

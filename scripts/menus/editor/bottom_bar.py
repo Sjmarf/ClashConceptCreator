@@ -122,14 +122,21 @@ class BottomBar:
 
         c.display.blit(self.surf, main_pos)
         if self.right_click is not None:
-            self.right_click.render(c.display,(main_pos[0]+self.size[0]-300,main_pos[1]+self.size[1]-180))
+            self.right_click.render(c.display,(main_pos[0]+self.size[0]-310,main_pos[1]+self.size[1]-140))
 
     def event(self, event):
         pos = (0, 0)
         if self.right_click is not None:
             output = self.right_click.event(event)
             if output is not None:
-                print(output)
+                if output == "image store":
+                    from scripts.menus.editor_sub.dev.image_store import ImageStoreViewer
+                    c.submenu = ImageStoreViewer()
+
+                elif output == "update speed history":
+                    from scripts.menus.editor_sub.dev.update_history import UpdateHistoryViewer
+                    c.submenu = UpdateHistoryViewer()
+                self.right_click = None
 
         if event.type == pygame.MOUSEBUTTONDOWN:
             pos = (event.pos[0] - self.pos[0], event.pos[1] - self.pos[1])
@@ -171,7 +178,7 @@ class BottomBar:
             if self.more_button.click(event,pos):
                 if self.right_click is None:
                     self.right_click = RightClick()
-                    self.right_click.set_options(["update speed history","image store"],width=250)
+                    self.right_click.set_options(["update speed history","image store"],width=250,bg_col=(50,50,55))
                 else:
                     self.right_click = None
 

@@ -43,7 +43,8 @@ def renderGrid(element):
                         img.blit(box_background, (x, y))
                         if element[0] is not None:
                             # Blit image
-                            icon = pygame.image.load('projects/' + c.project_name + '/images/' + element[0] + '.png')
+                            icon = c.image_store.get_image(
+                                'projects/' + c.project_name + '/images/' + element[0] + '.png')
                             icon = scale_image(icon, data[5]*(box_width/150)*icon_size_mult)
                             offset = (box_width - data[5]*(box_width/150)*icon_size_mult) // 2
                             img.blit(icon, (x + data[6][0] + offset, y + data[6][1] + offset))

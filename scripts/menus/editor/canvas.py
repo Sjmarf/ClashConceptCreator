@@ -2,7 +2,10 @@ import pygame
 import time
 from scripts import common as c
 from _thread import start_new_thread
+from datetime import datetime
+
 from scripts.utility import element_actions
+from scripts.utility.file_manager import saveJson,loadJson
 
 from scripts.elements.button import renderButton
 from scripts.elements.grid import renderGrid
@@ -50,6 +53,7 @@ class Canvas:
         # Load elements
         data = c.data["el"].copy()
         self.snap_lines = {"x": [667], "y": [375]}
+        update_times = []
 
         draw_funcs = {"background": None,
                       "button": renderButton,
@@ -94,15 +98,29 @@ class Canvas:
                     self.snap_lines['x'].append(pos[0] + size[0] // 2)
                 if not pos[1] + size[1] in self.snap_lines['y']:
                     self.snap_lines['y'].append(pos[1] + size[1] // 2)
-            # print("element "+data[element][2], round(time.time() - el_start_time,3))
-        # print("TOTAL TIME: ",round(time.time()-start_time,3))
-        c.image_store.clear_unused_images()
+            update_times.append([data[element][2], round(time.time() - el_start_time,3)])
+
         if draw_dark and c.data["el"][0][3] is not None:
             dark_img = pygame.Surface(c.canvas.get_size(), pygame.SRCALPHA)
             dark_img.fill((0, 0, 0, 120))
             canvas.blit(dark_img, (0, 0))
         canvas.blit(element_layer, (0, 0))
         c.canvas = canvas
+        # Update update_speed log
+        # (you can access this by clicking the three dots at the bottom of the editor while in Dev Mode)
+        if c.settings["dev_mode"]:
+            data = loadJson('projects/'+c.project_name+'/update_speed.json')
+            if data["record"]:
+                today = datetime.today()
+                total_time = round(time.time() - start_time, 3)
+                data["last"] = update_times
+                date_string = today.strftime("%d %b %H:%M")
+                data["all"].insert(0,[date_string,total_time])
+                # Cap the number of entries
+                if len(data["all"]) > 17:
+                    del data["all"][-1]
+                saveJson('projects/'+c.project_name+'/update_speed.json',data)
+        c.image_store.clear_unused_images()
 
     def render(self):
         self.scale_factor = self.size[0] / c.canvas.get_width()

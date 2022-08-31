@@ -10,7 +10,7 @@ def renderBox(element):
     if data[3] == "map":
         temp_surf = Surface(data[1],SRCALPHA)
         temp_surf.fill((126,127,101))
-        bg = image.load('assets/elements/box/map_bg.png').convert_alpha()
+        bg = c.image_store.get_image('assets/elements/box/map_bg.png')
         temp_surf.blit(bg,(data[1][0]//2-466,data[1][1]//2-147))
         cutout = size_element('assets/elements/box/cutout.png', data[1], (30, 30, 30, 30))
         temp_surf.blit(cutout,(0,0))

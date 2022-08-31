@@ -25,5 +25,5 @@ def tint_image(surf,col,original_col):
             pixels[x][y] = color
 
     del pixels
-    print("Image tint took:", round(time() - start_time, 3))
+    print("Image tint took "+str(round(time() - start_time, 3))+"s")
     return surf
