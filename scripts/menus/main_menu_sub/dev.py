@@ -22,7 +22,7 @@ class DevMenu:
         centre = c.width // 2 - 125
         self.surf.blit(self.title, (centre - self.title.get_width() // 2, 15))
         self.surf.blit(self.subtitle, (centre - self.subtitle.get_width() // 2, 60))
-        self.back_button.render(self.surf,(20,20))
+        self.back_button.render(self.surf, (20, 20))
 
         self.version_number.render(self.surf, (centre - 150, 120))
         self.version_update_button.render(self.surf, (centre - 150, 190))
@@ -33,7 +33,7 @@ class DevMenu:
     def event(self, event, pos):
         self.version_number.event(event, pos)
 
-        if self.back_button.click(event,pos):
+        if self.back_button.click(event, pos):
             from scripts.menus.main_menu_sub.settings import Settings
             c.menu.content = Settings()
             return
@@ -43,7 +43,7 @@ class DevMenu:
             print("DELETING PROJECTS\n-------")
             import shutil
             for proj in getFileList('projects'):
-                if proj != "projects.json":
+                if proj not in {"projects.json", ".gitkeep"}:
                     shutil.rmtree('projects/' + proj)
                     print("Deleted project " + proj)
             print("DONE")

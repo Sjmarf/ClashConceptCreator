@@ -182,14 +182,15 @@ class ImageSelection:
 
         packs_list = getFileList('asset packs')
         for pack in packs_list:
-            if not self.connection_error:
-                data = loadJson('asset packs/' + pack + '/search_data.json')
-                output = self.load_from_json(num, search_words, pack,
-                                             data["prefix"], data["suffix"], data["remove_suffix_if_provided"])
-                if output:
-                    print('Killed previous thread')
-                    return None
-            self.load_from_path(search_words, 'asset packs/' + pack + '/local', pack)
+            if pack != ".gitkeep":
+                if not self.connection_error:
+                    data = loadJson('asset packs/' + pack + '/search_data.json')
+                    output = self.load_from_json(num, search_words, pack,
+                                                 data["prefix"], data["suffix"], data["remove_suffix_if_provided"])
+                    if output:
+                        print('Killed previous thread')
+                        return None
+                self.load_from_path(search_words, 'asset packs/' + pack + '/local', pack)
 
         if num == self.search_num:
             self.loading = False

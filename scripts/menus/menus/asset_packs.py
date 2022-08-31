@@ -18,7 +18,8 @@ class AssetPacks:
 
         self.pack_buttons = []
         for pack in getFileList('asset packs'):
-            self.pack_buttons.append([Button(pack,width=200),pack])
+            if pack != ".gitkeep":
+                self.pack_buttons.append([Button(pack,width=200),pack])
 
     def switch_page(self,pack_name):
         self.page = pack_name
