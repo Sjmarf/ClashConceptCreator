@@ -69,6 +69,8 @@ class MainMenu:
                                 SidebarButton("About")]
 
     def check_for_news_updates(self):
+        import time
+        time.sleep(0.2)
         # Increment the value at this site by 1 when you add news!
         url = "https://gist.githubusercontent.com/Sjmarf/85f99e730cfc3e16db535dc23d14d966/raw/ccc_news_id.json"
         try:

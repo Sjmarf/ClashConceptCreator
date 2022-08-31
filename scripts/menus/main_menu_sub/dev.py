@@ -1,8 +1,11 @@
-from scripts import common as c
-from scripts.editor_objects.text_input import TextInput
-from scripts.editor_objects.button import Button
-from scripts.utility.file_manager import saveJson, loadJson, getFileList
 import pygame
+import shutil
+import os
+
+from scripts import common as c
+from scripts.editor_objects.button import Button
+from scripts.editor_objects.text_input import TextInput
+from scripts.utility.file_manager import saveJson, loadJson, getFileList
 
 
 class DevMenu:
@@ -30,6 +33,18 @@ class DevMenu:
 
         c.display.blit(self.surf, (250, 0))
 
+    def del_folder_contents(self, folder):
+        for filename in os.listdir(folder):
+            if filename not in {'.gitkeep', "projects.json"}:
+                file_path = os.path.join(folder, filename)
+                try:
+                    if os.path.isfile(file_path) or os.path.islink(file_path):
+                        os.unlink(file_path)
+                    elif os.path.isdir(file_path):
+                        shutil.rmtree(file_path)
+                except Exception as e:
+                    print('Failed to delete %s. Reason: %s' % (file_path, e))
+
     def event(self, event, pos):
         self.version_number.event(event, pos)
 
@@ -39,13 +54,21 @@ class DevMenu:
             return
 
         if self.prep_button.click(event, pos):
+            print("-----------\nPrepping for release...")
+
             saveJson('projects/projects.json', [])
-            print("DELETING PROJECTS\n-------")
-            import shutil
-            for proj in getFileList('projects'):
-                if proj not in {"projects.json", ".gitkeep"}:
-                    shutil.rmtree('projects/' + proj)
-                    print("Deleted project " + proj)
+            self.del_folder_contents('projects')
+            print("Deleted projects")
+
+            self.del_folder_contents('exports')
+            print("Deleted exports")
+
+            self.del_folder_contents('local images')
+            print("Deleted local images")
+
+            c.settings["dev_mode"] = False
+            saveJson("data/settings.json", c.settings)
+            print("Disabled developer mode")
             print("DONE")
 
         if self.version_update_button.click(event, pos):
