@@ -6,12 +6,20 @@ from scripts.utility.tint_image import tint_image
 
 class ImageStore:
     def __init__(self):
-        icon_list = [("trophy", "🏆"), ("trophy2", "🏺"), ("town_hall", "🏛"), ("builder_potion", "🍷"),
-                     ("capital_gold", "🪞"), ("donation", "👨"), ("preview", "👁"), ("profile", "👤"),
-                     ("raid_log", "📗"), ("random", "🎲"), ("research_potion", "🔎"), ("share", "👉"), ("stopwatch", "🕰"),
-                     ("war_log", "📕"), ("xp", "✹"), ("sword", "🗡"), ("spell", "🍹"), ("siege_machine", "🚗"),
-                     ("elixir", "💧"), ("builder_elixir", "🩸"), ("gold", "💰"), ("builder_gold", "🪙"), ("gem", "💎"),
-                     ("health", "❤"),("damage", "💥"),("view","👀"),("cross","❌"),("raid_medal","🎖")]
+        icon_list = [("trophy", "🏆"), ("trophy2", "🏺"), ("trophy3","💜"),("xp", "✹"), ("town_hall", "🏛"),
+                     ("builder_potion", "🍷"), ("research_potion", "🔎"),
+                     ("gold", "💰"),("elixir", "💧"),("builder_gold", "🪙"),("builder_elixir", "🩸"),
+                     ("gem", "💎"),("capital_gold", "🪞"), ("raid_medal", "🎖"), ("league_medal","🥇"),
+                     ("donation", "👨"), ("preview", "👁"), ("view","👀"), ("profile", "👤"),
+                     ("raid_log", "📗"), ("war_log", "📕"), ("stats","📈"), ("random", "🎲"), ("stopwatch", "🕰"),
+                     ("war","🤺"),("swords","🔪"),("sword", "🗡"), ("spell", "🍹"), ("siege_machine", "🚗"),
+                     ("challenge","🟧"),("friend","👯"),("edit","🖊"),("request","👥"),("builder","😁"),
+                     ("chat","💬"), ("base_design","📝"),("calendar","🗓"), ("shield","🛡"),("star","🌟"),
+                     ("hammer","🔨"),("clan","🏘"),
+                     ("health", "❤"),("damage", "💥"),("attack_speed","💨"),("skeletons","💀"),("deploy","🫡"),
+                     ("info","🟦"),("cross","❌"),("hashtag","🏁"),("share", "👉"),("home","🏠"),
+                     ("arrow_up","🔼"), ("arrrow_down","🔽"),("arrow_back","🔙"),("tick","✅"),("cross2","💔"),
+                     ("up_down","🔃")]
         self.icons2 = {}  # key = name
         self.icons = {}  # key = emoji
         for name, emoji in icon_list:

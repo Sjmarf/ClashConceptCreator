@@ -10,7 +10,7 @@ class ChoiceSelection:
     def __init__(self, pos, path, set_path, width=300, allow_none=False, submenu_layer=1, icon_size=50):
         self.path, self.set_path, self.pos, self.allow_none, self.submenu_layer, self.icon_size = \
             path, set_path, pos, allow_none, submenu_layer, icon_size
-        self.surf = pygame.Surface((width, 340), pygame.SRCALPHA)
+        self.surf = pygame.Surface((width, 380), pygame.SRCALPHA)
         self.width = width
 
         if allow_none:
@@ -31,6 +31,8 @@ class ChoiceSelection:
     def render(self):
         self.surf.fill((50, 50, 55))
         x, y = (20, 20)
+        if self.pos[1]+380 > c.height:
+            self.pos = [self.pos[0],c.height-400]
         if self.allow_none:
             self.none_button.render(self.surf, (self.width // 2 - 75, y))
             y += 40

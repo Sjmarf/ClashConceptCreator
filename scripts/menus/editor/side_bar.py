@@ -54,9 +54,7 @@ class SideBar:
                                            label="Font Size", int_only=True, int_min=10)]
 
             elif element == "button":
-                self.elements = [ChoiceInput(data[3], [c.selected[0], 3], ['green','cyan','red','lilac','more','drop-down',
-                                                                           'custom'], label="Type",
-                                             window_width=200, mode="buttons"),
+                self.elements = [FileInput(data[3], None, None, mode="button_type"),
 
                                  TextInput(data[4], [name, 4],
                                            label="Label", special_func="get_int_from_text"),

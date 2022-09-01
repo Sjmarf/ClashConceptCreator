@@ -9,16 +9,17 @@ from scripts.utility.scale_image import scale_image
 def renderButton(element):
     data = c.data["el"][element]
 
-    if data[3] in {"more","drop-down"}:
+    if data[3] in {"more","drop-down","more","small","view","war-info","profile","play"}:
         img = pygame.image.load('assets/elements/button/' + data[3] + '.png').convert_alpha()
     else:
         # img = size_element('assets/elements/button/' + data[3] + '.png', data[1], edge=(30, 30, 35, 20))
         if data[3] == "custom":
-            img = c.image_store.get_tinted_image("button",data[7])
+            img = c.image_store.get_tinted_image("tinted_button",data[7])
             img = size_element(img, data[1], edge=(30, 30, 35, 20), direct=True)
         else:
             try:
-                img = size_element('assets/elements/button/'+data[3]+'.png', data[1], edge=(30, 30, 55, 20))
+                img = c.image_store.get_sized_image('button '+data[3],'assets/elements/button/'+data[3]+'.png', data[1],
+                                                    edge=(30, 30, 55, 20))
             except ValueError:
                 img = size_element('assets/elements/button/' + data[3] + '.png', data[1], edge=(30, 30, 35, 20))
 

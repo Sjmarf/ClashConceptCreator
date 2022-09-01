@@ -35,6 +35,9 @@ class FileInput:
                 if self.mode == "background":
                     from scripts.menus.editor_sub.background_selection import BackgroundSelection
                     c.submenu = BackgroundSelection()
+                elif self.mode == "button_type":
+                    from scripts.menus.editor_sub.button_type import ButtonTypeSelector
+                    c.submenu = ButtonTypeSelector()
                 else:
                     from scripts.menus.editor_sub.file_selection import FileSelection
                     c.submenu = FileSelection(self.asset_path,self.setting_path)
