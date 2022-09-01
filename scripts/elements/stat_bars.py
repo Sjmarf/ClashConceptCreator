@@ -30,7 +30,7 @@ def renderStatBars(element):
         img.blit(font_text, (data[5]+29, y - 14))
         # Icon
         if row[0] is not None:
-            icon = pygame.image.load('assets/elements/icon/' + row[0] + '.png').convert_alpha()
+            icon = c.image_store.icons2[row[0]]
             icon = scale_image(icon, data[5]+19)
             img.blit(icon, (0, y - 9))
         y += data[5] + 20
