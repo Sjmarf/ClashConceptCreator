@@ -16,7 +16,7 @@ class DevMenu:
         self.surf = pygame.Surface((c.width - 250, c.height), pygame.SRCALPHA)
         self.version_number = TextInput(c.VERSION, None, label="Version Number", width=300, no_editor=True)
         self.version_update_button = Button("Update All", width=300)
-        self.prep_button = Button("Prep for release", width=300)
+        self.prep_button = Button("Prep for commit", width=300)
 
         self.back_button = Button("< Back", width=100)
 

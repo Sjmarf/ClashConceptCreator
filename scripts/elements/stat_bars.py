@@ -10,7 +10,8 @@ def renderStatBars(element):
     data = c.data["el"][element]
     img = pygame.Surface(data[1], pygame.SRCALPHA)
     bar_width = data[1][0] - data[5] - 24
-    bar_img = size_element("assets/elements/stat bars/bar1.png", (bar_width, data[5]), (30, 30, 17, 10))
+    bar_img = c.image_store.get_sized_image("stat bar","assets/elements/stat bars/bar1.png",
+                                            (bar_width, data[5]), (30, 30, 17, 10))
     bar_img2 = c.image_store.get_tinted_image("stat bars", data[4])
     bar_img2 = size_element(bar_img2, (bar_width, data[5]), (30, 30, 17, 10), direct=True)
 

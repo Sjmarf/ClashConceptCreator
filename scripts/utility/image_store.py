@@ -1,5 +1,6 @@
 import pygame
 from scripts.utility.scale_image import scale_image
+from scripts.utility.size_element import size_element
 from scripts.utility.tint_image import tint_image
 
 class ImageStore:
@@ -30,6 +31,20 @@ class ImageStore:
                 self.element_images[path] = img
             except FileNotFoundError:
                 img = pygame.image.load('assets/editor_gui/error.png').convert_alpha()
+            return img
+
+    def get_sized_image(self,name,path,size,edge=(100,100,100,100)):
+        name = name+str(size)
+        self.element_images_used.append(name)
+        if name in self.element_images.keys():
+            return self.element_images[name].copy()
+        else:
+            try:
+                img = size_element(path,size,edge)
+            except FileNotFoundError:
+                img = pygame.image.load('assets/editor_gui/error.png').convert_alpha()
+            self.element_images[name] = img
+            print("loaded image to image store: " + name)
             return img
 
     def get_background(self,path):
