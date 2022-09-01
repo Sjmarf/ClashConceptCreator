@@ -27,3 +27,27 @@ def tint_image(surf,col,original_col):
     del pixels
     print("Image tint took "+str(round(time() - start_time, 3))+"s")
     return surf
+
+def get_monochrome_image(surf):
+    pixels = PixelArray(surf)
+
+    # Convert colour to HSVA
+    start_time = time()
+
+    for x in range(surf.get_width()):
+        for y in range(surf.get_height()):
+            # Turn the pixel data into an RGB tuple
+            rgb = surf.unmap_rgb(pixels[x][y])
+            # Get a new color object using the RGB tuple and convert to HSLA
+            color = Color(*rgb)
+            h, s, l, a = color.hsla
+            # Add value to the hue and wrap to under 360
+            new = list(color.hsla)
+            new[1] = 0
+            color.hsla = new
+            # Assign directly to the pixel
+            pixels[x][y] = color
+
+    del pixels
+    print("B&W image took "+str(round(time() - start_time, 3))+"s")
+    return surf

@@ -72,26 +72,27 @@ class Canvas:
         draw_dark = False
         for element in range(len(data)):
             el_start_time = time.time()
-            if element not in c.data["hidden"]:
-                pos, size, name = data[element][0:3]
-                func = draw_funcs[name]
-                if name == "menu":
-                    # Darken the background image
-                    draw_dark = True
 
-                if name == "background":
-                    if c.data["el"][element][3] is not None:
-                        img = c.image_store.get_background('assets/backgrounds/' + c.data["el"][element][3] + '.png')
-                        canvas.blit(img, (0, 0))
-                else:
-                    img = func(element)
-                    if c.multi_select and img is not None:
-                        if element not in c.multi_select_elements:
-                            # Darken image for multi-select
-                            col_surf = pygame.Surface(size)
-                            col_surf.fill((90, 90, 90))
-                            img.blit(col_surf, (0, 0), special_flags=pygame.BLEND_RGB_MULT)
-                    if img is not None:
+            pos, size, name = data[element][0:3]
+            func = draw_funcs[name]
+            if name == "menu":
+                # Darken the background image
+                draw_dark = True
+
+            if name == "background":
+                if c.data["el"][element][3] is not None:
+                    img = c.image_store.get_background('assets/backgrounds/' + c.data["el"][element][3] + '.png')
+                    canvas.blit(img, (0, 0))
+            else:
+                img = func(element)
+                if c.multi_select and img is not None:
+                    if element not in c.multi_select_elements:
+                        # Darken image for multi-select
+                        col_surf = pygame.Surface(size)
+                        col_surf.fill((90, 90, 90))
+                        img.blit(col_surf, (0, 0), special_flags=pygame.BLEND_RGB_MULT)
+                if img is not None:
+                    if element not in c.data["hidden"]:
                         element_layer.blit(img, pos)
 
                 if not pos[0] + size[0] in self.snap_lines['x']:

@@ -126,6 +126,7 @@ class ListEntriesEditor:
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if self.add_button.click(event,pos):
                 self.rows.append(deepcopy(c.data["el"][c.selected[0]][5]))
+                print(self.rows)
                 self.render_row_titles()
                 return None
 

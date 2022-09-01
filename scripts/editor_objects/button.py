@@ -4,16 +4,17 @@ import pygame
 
 
 class Button:
-    def __init__(self, text, width=None, pos=(0, 0), file='blank'):
-        text = c.editor_font.render(text, True, (200, 200, 200))
+    def __init__(self, text, width=None, pos=(0, 0), file='blank', text_col=(200, 200, 205)):
+        text = c.editor_font.render(text, True, text_col)
         if width is None:
             width = text.get_width() + 30
         self.width = width
 
         files = {"blank":'assets/editor_gui/button.png',
-                 "discord":'assets/editor_gui/discord_button.png'}
+                 "discord":'assets/editor_gui/discord_button.png',
+                 "itch":'assets/editor_gui/button_green.png'}
 
-        if file == "blank":
+        if file in {"blank","itch"}:
             src = pygame.image.load(files[file]).convert_alpha()
             sheet = SpriteSheet(src, direct=True)
             img = pygame.Surface((width, 30), pygame.SRCALPHA)

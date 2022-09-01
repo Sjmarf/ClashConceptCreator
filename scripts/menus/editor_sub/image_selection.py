@@ -135,7 +135,7 @@ class ImageSelection:
                 size, url = (0, 0, 400), data[name]
             if (not any(ext in url for ext in self.extensions)) or not ignore_if_already_extension:
                 url += suffix
-                url = prefix + url
+            url = prefix + url
             try:
                 response = requests.get(url, timeout=5)
             except requests.exceptions.ConnectionError:

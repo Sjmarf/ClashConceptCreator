@@ -68,7 +68,7 @@ class NewElement:
             # Tabs, selected #, Type
             "tabs": [[0, 0], [700, 100], "tabs", ["Tab1"], 0, "1"],
             # Layout (type, size in %, divider on/off), Items, Empty row (used when a new row is added), image size
-            "list": [[0, 0], [500, 200], "list", [["text", 100, True]], [[["Text"]]], ["Text"], 100],
+            "list": [[0, 0], [500, 200], "list", [["text", 100, True]], [[["Text"]]], [["Text"]], 100],
             # Type, items (image name, label)
             "icon list": [[0, 0], [300, 100], "icon list", 1, [[None, 1]]],
             # entries, bar col

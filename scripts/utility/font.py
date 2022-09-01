@@ -37,14 +37,15 @@ def renderText(text, preset, size, font_type='large', border=0, thickness=0, col
 
     smoothscale_size_method = True  # Set to True to enable experimental method of sizing the text, to remove
     # undesirable effects when using very small text
+    smoothscale_orig_size = 50
     keys = pygame.key.get_pressed()
     if keys[pygame.K_p]:
         smoothscale_size_method = False
 
     if smoothscale_size_method:
-        supercell = pygame.font.Font('assets/fonts/' + font_type + '.ttf', 100)
+        supercell = pygame.font.Font('assets/fonts/' + font_type + '.ttf', smoothscale_orig_size)
         test_font = pygame.font.Font('assets/fonts/' + font_type + '.ttf', size)
-        scale_factor = 100/size
+        scale_factor = smoothscale_orig_size/size
         offset = 10
         orig_thickness = thickness
         border,thickness = border*scale_factor,thickness*scale_factor*1.2
@@ -76,7 +77,7 @@ def renderText(text, preset, size, font_type='large', border=0, thickness=0, col
     if smoothscale_size_method:
         test_surf = test_font.render(text,True,(0,0,0))
         width,height = test_surf.get_size()
-        x_offset = (offset/100)*size*2
+        x_offset = (offset/smoothscale_orig_size)*size*2
         y_offset = x_offset+(orig_thickness)/50*size/1.2
         surf = pygame.transform.smoothscale(main_surf, (width+x_offset,
                                                              height+y_offset))

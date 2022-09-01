@@ -15,7 +15,7 @@ def renderMenu(element):
         c.data["el"][element][1] = (new_width, 200)
         new_height = 200
 
-    img = c.image_store.get_sized_image("menu",'assets/foregrounds/' + data[3] + '.png',(new_width, new_height))
+    img = c.image_store.get_sized_image("menu "+data[3],'assets/foregrounds/' + data[3] + '.png',(new_width, new_height))
     if data[3] == "menu_4":
         title_y = 42
     else:

@@ -3,17 +3,22 @@ from scripts.utility.file_manager import getFileList,saveJson,loadJson
 
 def duplicate(data,name):
     from shutil import copytree,ignore_patterns
-    copytree('projects/' + name, 'projects/' + name + "2", ignore=ignore_patterns(".DS_Store"))
+    num = 2
+    new_name = name + str(num)
+    while new_name in getFileList('projects/'):
+        new_name = name + str(num)
+        num += 1
+    copytree('projects/' + name, 'projects/' + new_name, ignore=ignore_patterns(".DS_Store"))
 
     if "/" not in name:
-        data.append(name + "2")
+        data.append(new_name)
     else:
         folder, name = name.split("/")
         print(folder, name)
         for item in data:
             if type(item) == list:
                 if item[0] == folder:
-                    item.append(name + "2")
+                    item.append(new_name)
     saveJson('projects/projects.json', data)
 
 def delete(data,name):

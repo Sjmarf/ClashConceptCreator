@@ -70,6 +70,9 @@ class News:
             if article[4] == "DISCORD":
                 self.discord_buttons.append((Button("",file="discord",width=150),
                                              c.DISCORD_LINK,text_x))
+            elif article[4] == "ITCH":
+                self.discord_buttons.append((Button("Download", width=150, file="itch", text_col=(225,255,225)),
+                                             "https://smarf1.itch.io/ccc", text_x))
             else:
                 self.discord_buttons.append((None,None,text_x))
 

@@ -24,7 +24,7 @@ class NewProject:
             surf.blit(text_surf, (100 - text_surf.get_width() // 2, 120))
             self.thumbnails[name] = surf
 
-        self.rows = ["troop"]
+        self.rows = ["troop","magic items"]
 
     def render(self, surf):
         surf.blit(self.title, (surf.get_width() // 2 - self.title.get_width() // 2, 20))

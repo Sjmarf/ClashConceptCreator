@@ -60,6 +60,7 @@ class Reddit:
         try:
             from psaw import PushshiftAPI
             api = PushshiftAPI()
+            # =https://api.pushshift.io/reddit/search/submission/?subreddit=ClashOfClans,q=Concept
             submissions = api.search_submissions(subreddit='ClashOfClans', title='Concept|Concepts',
                                                  limit=60, sort_type="created_utc", sort="desc")
         except UserWarning:

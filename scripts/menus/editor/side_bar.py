@@ -71,7 +71,7 @@ class SideBar:
             elif element == "grid":
                 self.elements = [SubmenuButton("Edit Boxes", "grid", width=150),
                                  ChoiceInput(data[8], [name, 8],
-                                             ["skin", "donation"], mode="buttons", label="Type"),
+                                             ["skin", "donation", "magic item"], mode="buttons", label="Type"),
                                  ChoiceInput(data[7], [name, 7],
                                              ["centre", "left"], mode="buttons", label="Align"),
                                  TextInput(str(data[4]), [name, 4],

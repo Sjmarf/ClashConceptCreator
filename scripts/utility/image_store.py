@@ -1,7 +1,9 @@
 import pygame
+from scripts import common as c
 from scripts.utility.scale_image import scale_image
 from scripts.utility.size_element import size_element
-from scripts.utility.tint_image import tint_image
+from scripts.utility.tint_image import tint_image, get_monochrome_image
+from copy import deepcopy
 
 
 class ImageStore:
@@ -33,6 +35,7 @@ class ImageStore:
 
     def get_image(self, path):
         self.element_images_used.append(path)
+        c.images_used.append(path.split("/")[-1])
         if path in self.element_images.keys():
             return self.element_images[path]
         else:
@@ -52,11 +55,26 @@ class ImageStore:
         else:
             try:
                 img = size_element(path, size, edge)
+                self.element_images[name] = img
             except FileNotFoundError:
                 img = pygame.image.load('assets/editor_gui/error.png').convert_alpha()
-            self.element_images[name] = img
             print("loaded image to image store: " + name)
-            return img
+            return img.copy()
+
+    def get_monochrome_image(self,path):
+        self.element_images_used.append(path.split("/")[-1])
+        name = path + " (monochrome)"
+        self.element_images_used.append(name)
+        if name in self.element_images.keys():
+            return self.element_images[name].copy()
+        else:
+            try:
+                img = pygame.image.load(path).convert_alpha()
+                img = get_monochrome_image(img)
+                self.element_images[name] = img
+            except FileNotFoundError:
+                img = pygame.image.load('assets/editor_gui/error.png').convert_alpha()
+            return img.copy()
 
     def get_background(self, path):
         self.element_images_used = []
@@ -72,19 +90,20 @@ class ImageStore:
             self.element_images_used.append(name)
             return self.element_images[name]
         else:
-            if element_type == "button":
+            if element_type == "tinted_button":
                 img = pygame.image.load('assets/elements/button/green.png').convert_alpha()
                 img = tint_image(img, col, original_col=(87, 78, 80))
                 self.element_images[name] = img
                 self.element_images_used.append(name)
                 return img
-            elif element_type == "stat bars":
+            elif element_type == "stat_bars":
                 print('loading', col)
                 img = pygame.image.load('assets/elements/stat bars/bar2.png').convert_alpha()
                 img = tint_image(img, col, original_col=(87, 74, 85))  # (144,216,56)
                 self.element_images[name] = img
                 self.element_images_used.append(name)
                 return img
+        print("NONE FOUND")
 
     def clear_unused_images(self):
         num_removed = 0
