@@ -35,6 +35,7 @@ class GridEditor:
         self.reorder, self.reorder_num = None, 0
         self.edit = None
         self.need_preview = False
+        self.frame_selection_indicator = pygame.image.load('assets/editor_gui/grid/arrow_down.png').convert_alpha()
 
         self.delete_box_button = SmallButton()
         self.title_text, self.box_preview = None, None
@@ -127,12 +128,15 @@ class GridEditor:
                                             scrollbar_mouse_y_offset=-50)
 
                 # Title input
-                self.title_text.render(self.surf, (c.width - 290, 60))
+                self.title_text.render(self.surf, (c.width - 290, 55))
                 # Frame options
                 x = c.width - 290
                 for num in self.grid_images.keys():
-                    self.surf.blit(self.grid_images[num], (x, 105))
+                    self.surf.blit(self.grid_images[num], (x, 115))
                     x += 50
+                # Frame selector
+                selected = c.data["el"][self.element][3][self.edit[1]][self.edit[2]][1]
+                self.surf.blit(self.frame_selection_indicator,(c.width-290+(50*selected),90))
                 # Attempt to load preview image if it isn't already loaded
                 if self.need_preview:
                     self.attemptPreviewLoad()
@@ -277,7 +281,7 @@ class GridEditor:
 
                         x = c.width - 290
                         for num in self.grid_images.keys():
-                            rect = pygame.Rect(x, 105, 40, 40)
+                            rect = pygame.Rect(x, 115, 40, 40)
                             if rect.collidepoint(mouse_pos):
                                 c.data["el"][self.element][3][self.edit[1]][self.edit[2]][1] = num
                                 self.create_rows()

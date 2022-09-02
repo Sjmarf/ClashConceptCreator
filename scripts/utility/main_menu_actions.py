@@ -18,7 +18,7 @@ def duplicate(data,name):
         for item in data:
             if type(item) == list:
                 if item[0] == folder:
-                    item.append(new_name)
+                    item.append(new_name.split("/")[1])
     saveJson('projects/projects.json', data)
 
 def delete(data,name):

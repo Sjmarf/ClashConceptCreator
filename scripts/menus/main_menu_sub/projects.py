@@ -24,7 +24,7 @@ class NewProject:
             surf.blit(text_surf, (100 - text_surf.get_width() // 2, 120))
             self.thumbnails[name] = surf
 
-        self.rows = ["troop","magic items"]
+        self.rows = ["troop", "magic items", "magic item info","magic item sell"]
 
     def render(self, surf):
         surf.blit(self.title, (surf.get_width() // 2 - self.title.get_width() // 2, 20))
@@ -34,9 +34,12 @@ class NewProject:
         for row in self.rows:
             surf.blit(self.thumbnails[row], (x, y))
             x += 230
+            if x > c.width - 450:
+                x = 20
+                y += 150
 
     def event(self, event, pos):
-        rect = pygame.Rect((20,80,200,150))
+        rect = pygame.Rect((20, 80, 200, 150))
         if rect.collidepoint(pos):
             self.new_project("blank")
             return None
@@ -48,15 +51,18 @@ class NewProject:
                 self.new_project(row)
                 return None
             x += 230
+            if x > c.width - 450:
+                x = 20
+                y += 150
 
     def new_project(self, template):
         print(template)
         proj_name = "Project " + str(len(c.menu.content.project_data) + 1)
         from shutil import copytree, ignore_patterns
         copytree('templates/' + template, 'projects/' + proj_name, ignore=ignore_patterns(".DS_Store"))
-        c.menu.content.project_data.insert(0,proj_name)
+        c.menu.content.project_data.insert(0, proj_name)
         saveJson('projects/projects.json', c.menu.content.project_data)
-        c.menu.content.open_project(proj_name,0)
+        c.menu.content.open_project(proj_name, 0)
 
 
 class Delete:
@@ -150,10 +156,12 @@ class Move:
 
 class Rename:
     def __init__(self, name):
-        self.is_folder = False
+        self.is_folder, self.folder_prefix = False, ""
         if "FOLDER" in name:
             name = name.replace("FOLDER ", "")
             self.is_folder = True
+        if "/" in name:
+            self.folder_prefix, name = name.split("/")
         self.old_name = name
         self.input = TextInput(name, None, width=300, no_editor=True)
         self.done_button = Button("Done", width=300)
@@ -167,10 +175,19 @@ class Rename:
         if self.done_button.click(event, pos):
             data = c.menu.content.project_data
             from shutil import move
-
-            if not self.is_folder:
+            if self.folder_prefix != "":
+                for i in data:
+                    if type(i) == list:
+                        if i[0] == self.folder_prefix:
+                            for num2,j in enumerate(i[1:]):
+                                if j == self.old_name:
+                                    i[num2+1] = self.input.text
+                                    move('projects/' + self.folder_prefix + "/" + self.old_name,
+                                         'projects/' + self.folder_prefix + "/" + self.input.text)
+            elif not self.is_folder:
                 data[data.index(self.old_name)] = self.input.text
                 move('projects/' + self.old_name, 'projects/' + self.input.text)
+
             else:
                 for i in data:
                     if type(i) == list:
@@ -371,11 +388,15 @@ class Projects:
         c.data = loadJson('projects/' + name + '/data.json')
 
         supported_versions = c.settings["supported_versions"]
-        if c.data["version"] not in supported_versions:
-            # If the project version isn't supported on this version, show error screen
-            from scripts.menus.menus.project_load_error import ProjectLoadError
-            c.menu = ProjectLoadError(ver=c.data["version"], supported=", ".join(supported_versions))
-        else:
+        if c.data["version"] == c.VERSION:
             # Open editor
             from scripts.menus.menus.editor import Editor
             c.menu = Editor()
+        elif c.data["version"] in supported_versions:
+            # Show project update screen
+            from scripts.menus.menus.project_update_menu import ProjectUpdate
+            c.menu = ProjectUpdate(name, ver=c.data["version"])
+        else:
+            # If the project version isn't supported on this version, show error screen
+            from scripts.menus.menus.project_load_error import ProjectLoadError
+            c.menu = ProjectLoadError(ver=c.data["version"], supported=", ".join(supported_versions))

@@ -9,7 +9,8 @@ class ButtonTypeSelector:
         self.surf = pygame.Surface((280, 500), pygame.SRCALPHA)
         self.surf.fill((50, 50, 55))
         self.buttons = [["green", "red", "blue", "light blue", "dark blue", "lilac", "beige", "orange"],
-                        ["orange2", "capital beige", "capital green", "black", "shop cyan", "shop purple", "custom"]]
+                        ["orange2", "orange3", "capital white", "capital beige", "capital green", "capital blue",
+                         "custom"]]
 
         x, y = 20, 20
         for column in self.buttons:

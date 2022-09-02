@@ -146,7 +146,7 @@ class SideBar:
 
             elif element == "box":
                 self.elements = [ChoiceInput(data[3], [name, 3],
-                                             ["solid", "gradient", "map"],
+                                             ["solid", "gradient", "highlight", "map"],
                                              mode="buttons", label="Type")]
                 if data[3] != "map":
                     self.elements.insert(1, ColourInput(data[4], [name, 4], label="Colour"))

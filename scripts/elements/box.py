@@ -33,6 +33,14 @@ def renderBox(element):
         cutout = size_element('assets/elements/box/cutout2.png', data[1], (30, 30, 30, 30))
         img.blit(cutout,(0,0),special_flags=pygame.BLEND_RGBA_SUB)
 
+    elif data[3] == "highlight":
+        img = size_element('assets/elements/box/custom1.png', data[1], (30, 30, 30, 30))
+        img.fill(data[4], special_flags=pygame.BLEND_RGB_ADD)
+        img2 = size_element('assets/elements/box/custom1.png', (data[1][0]-20,data[1][1]//2-10), (30, 30, 30, 30))
+        col = (data[4][0]+20,data[4][1]+20,data[4][2]+20)
+        img2.fill(col, special_flags=pygame.BLEND_RGB_ADD)
+        img.blit(img2,(10,10))
+
     else:
         img = size_element('assets/elements/box/custom1.png', data[1], (30, 30, 30, 30))
         img.fill(data[4],special_flags=pygame.BLEND_RGB_ADD)

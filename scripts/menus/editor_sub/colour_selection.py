@@ -61,7 +61,8 @@ class ColourSelection:
             (187, 187, 187),  # Box troop gradient grey
             (66, 66, 62),  # Chat grey
             (92, 92, 79),  # Menu header
-            (144,216,56),  # Stat bar green
+            (144, 216, 56),  # Stat bar green
+            (31, 7, 44),  # Magic Item background dark purple
         ]
         self.presets = []
         for col in preset_colours:
