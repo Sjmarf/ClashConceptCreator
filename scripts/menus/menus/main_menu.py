@@ -51,8 +51,7 @@ class SidebarButton:
 
 class MainMenu:
     def __init__(self,tab=0):
-        self.news_request_ok, self.news_notif, self.new_news_id = True, 0, 0
-        start_new_thread(self.check_for_news_updates, ())
+        self.news_request_ok, self.news_notif, self.new_news_id, self.checked_for_news = True, 0, 0, False
 
         self.logo_img = pygame.image.load('assets/editor_gui/main_menu/logo.png').convert_alpha()
         self.notif_img = pygame.image.load('assets/editor_gui/main_menu/notification.png').convert_alpha()
@@ -69,8 +68,6 @@ class MainMenu:
                                 SidebarButton("About")]
 
     def check_for_news_updates(self):
-        import time
-        time.sleep(0.2)
         # Increment the value at this site by 1 when you add news!
         url = "https://gist.githubusercontent.com/Sjmarf/85f99e730cfc3e16db535dc23d14d966/raw/ccc_news_id.json"
         try:
@@ -104,6 +101,10 @@ class MainMenu:
         self.gradient_img = pygame.transform.scale(img, (30, c.height))
 
     def render(self):
+        if not self.checked_for_news:
+            start_new_thread(self.check_for_news_updates, ())
+            self.checked_for_news = True
+
         c.display.fill((50, 50, 55))
         self.sidebar.fill((70, 70, 75))
         self.sidebar.blit(self.logo_img, (25, 25))
