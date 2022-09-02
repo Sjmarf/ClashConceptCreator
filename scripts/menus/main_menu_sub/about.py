@@ -9,7 +9,7 @@ class About:
         self.surf = pygame.Surface((c.width - 250, c.height), pygame.SRCALPHA)
         self.text = []
         text = ["CCC Version: "+c.VERSION,
-                "Version release date: ()",
+                "Version release date: 2nd Sep 2022",
                 "Supported project versions: "+", ".join(c.settings["supported_versions"]),
                 "",
                 "Python Version: "+python_version.split(" ")[0],
