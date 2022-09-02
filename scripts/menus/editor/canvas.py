@@ -5,7 +5,7 @@ from _thread import start_new_thread
 from datetime import datetime
 
 from scripts.utility import element_actions
-from scripts.utility.file_manager import saveJson,loadJson
+from scripts.utility.file_manager import saveJson, loadJson
 
 from scripts.elements.button import renderButton
 from scripts.elements.grid import renderGrid
@@ -24,7 +24,8 @@ from scripts.elements.stat_bars import renderStatBars
 class Canvas:
     def __init__(self, size):
         self.zoom = 1
-        self.pos = [0,0]
+        self.pos = [0, 0]
+        self.move_only = False
         self.snap_lines = {"x": [667], "y": [375]}
         c.canvas = pygame.Surface(c.canvas_size, pygame.SRCALPHA)
         c.canvas.fill((20, 20, 25))
@@ -99,7 +100,7 @@ class Canvas:
                     self.snap_lines['x'].append(pos[0] + size[0] // 2)
                 if not pos[1] + size[1] in self.snap_lines['y']:
                     self.snap_lines['y'].append(pos[1] + size[1] // 2)
-            update_times.append([data[element][2], round(time.time() - el_start_time,3)])
+            update_times.append([data[element][2], round(time.time() - el_start_time, 3)])
 
         if draw_dark and c.data["el"][0][3] is not None:
             dark_img = pygame.Surface(c.canvas.get_size(), pygame.SRCALPHA)
@@ -110,17 +111,17 @@ class Canvas:
         # Update update_speed log
         # (you can access this by clicking the three dots at the bottom of the editor while in Dev Mode)
         if c.settings["dev_mode"]:
-            data = loadJson('projects/'+c.project_name+'/update_speed.json')
+            data = loadJson('projects/' + c.project_name + '/update_speed.json')
             if data["record"]:
                 today = datetime.today()
                 total_time = round(time.time() - start_time, 3)
                 data["last"] = update_times
                 date_string = today.strftime("%d %b %H:%M")
-                data["all"].insert(0,[date_string,total_time])
+                data["all"].insert(0, [date_string, total_time])
                 # Cap the number of entries
                 if len(data["all"]) > 17:
                     del data["all"][-1]
-                saveJson('projects/'+c.project_name+'/update_speed.json',data)
+                saveJson('projects/' + c.project_name + '/update_speed.json', data)
         c.image_store.clear_unused_images()
 
     def render(self):
@@ -169,10 +170,14 @@ class Canvas:
                 # Draw red outline when moving object
                 if self.transform is not None:
                     if self.transform == "move":
-                        pygame.draw.rect(canvas, (200, 0, 0),
-                                         (abs_pos[0], abs_pos[1],
-                                          self.selection_size[0] * sf * self.zoom,
-                                          self.selection_size[1] * sf * self.zoom), 2)
+                        if not self.move_only:
+                            pygame.draw.rect(canvas, (200, 0, 0),
+                                             (abs_pos[0], abs_pos[1],
+                                              self.selection_size[0] * sf * self.zoom,
+                                              self.selection_size[1] * sf * self.zoom), 2)
+                        else:
+                            canvas.blit(self.node_img, (abs_pos[0] - 6 + self.selection_size[0] // 4,
+                                                        abs_pos[1] - 6 + self.selection_size[1] // 4))
 
                     elif 'resize' in self.transform:
                         borders = [pos[0], pos[1], size[0], size[1]]
@@ -194,28 +199,34 @@ class Canvas:
                                          borders, 2)
 
                 else:
+                    self.move_only = False
+                    if c.selected[1] == "button":
+                        if c.data["el"][c.selected[0]][3] in \
+                                {"more", "drop-down", "info", "small", "view", "war-info", "profile", "play"}:
+                            self.move_only = True
                     # Draw box and handles
-                    pygame.draw.rect(canvas, (200, 0, 0), (pos[0], pos[1], size[0], size[1]), 2)
-                    # Handles
                     canvas.blit(self.node_img, (pos[0] + size[0] // 2 - 6, pos[1] + size[1] // 2 - 6))  # Centre
-                    canvas.blit(self.node_img, (pos[0] - 6, pos[1] + size[1] // 2 - 6))  # Left
-                    canvas.blit(self.node_img, (pos[0] + size[0] - 6, pos[1] + size[1] // 2 - 6))  # Right
-                    canvas.blit(self.node_img, (pos[0] + size[0] // 2 - 6, pos[1] - 6))  # Top
-                    canvas.blit(self.node_img, (pos[0] + size[0] // 2 - 6, pos[1] + size[1] - 6))  # Bottom
-                    canvas.blit(self.node_img, (pos[0] - 6, pos[1] - 6))  # Top-Left
-                    canvas.blit(self.node_img, (pos[0] + size[0] - 6, pos[1] - 6))  # Top-Right
-                    canvas.blit(self.node_img, (pos[0] - 6, pos[1] + size[1] - 6))  # Bottom-Left
-                    canvas.blit(self.node_img, (pos[0] + size[0] - 6, pos[1] + size[1] - 6))  # Bottom-Right
+                    # Handles
+                    if not self.move_only:
+                        pygame.draw.rect(canvas, (200, 0, 0), (pos[0], pos[1], size[0], size[1]), 2)
+                        canvas.blit(self.node_img, (pos[0] - 6, pos[1] + size[1] // 2 - 6))  # Left
+                        canvas.blit(self.node_img, (pos[0] + size[0] - 6, pos[1] + size[1] // 2 - 6))  # Right
+                        canvas.blit(self.node_img, (pos[0] + size[0] // 2 - 6, pos[1] - 6))  # Top
+                        canvas.blit(self.node_img, (pos[0] + size[0] // 2 - 6, pos[1] + size[1] - 6))  # Bottom
+                        canvas.blit(self.node_img, (pos[0] - 6, pos[1] - 6))  # Top-Left
+                        canvas.blit(self.node_img, (pos[0] + size[0] - 6, pos[1] - 6))  # Top-Right
+                        canvas.blit(self.node_img, (pos[0] - 6, pos[1] + size[1] - 6))  # Bottom-Left
+                        canvas.blit(self.node_img, (pos[0] + size[0] - 6, pos[1] + size[1] - 6))  # Bottom-Right
 
         cropped_canvas = pygame.Surface(self.size, pygame.SRCALPHA)
-        cropped_canvas.blit(canvas, self.pos) #(cropped_canvas.get_width() // 2 - canvas.get_width() // 2,
-                                     #cropped_canvas.get_height() // 2 - canvas.get_height() // 2)
+        cropped_canvas.blit(canvas, self.pos)  # (cropped_canvas.get_width() // 2 - canvas.get_width() // 2,
+        # cropped_canvas.get_height() // 2 - canvas.get_height() // 2)
         c.display.blit(cropped_canvas, (0, 0))
 
     def event(self, event):
-        #if event.type == pygame.MOUSEWHEEL:
-            #self.pos[0] -= event.x*5
-            ##self.pos[1] += event.y*5
+        # if event.type == pygame.MOUSEWHEEL:
+        # self.pos[0] -= event.x*5
+        ##self.pos[1] += event.y*5
 
         if event.type == pygame.KEYDOWN:
             if c.multi_select:
@@ -269,14 +280,14 @@ class Canvas:
                         elif event.key == pygame.K_m:
                             self.transform = "move"
 
-                #if event.key == pygame.K_EQUALS:
-                    #self.zoom += 0.1
-                    #self.pos[0] -= 1334 * 0.025
-                    #self.pos[1] -= 750 * 0.025
-                #elif event.key == pygame.K_MINUS:
-                    #self.zoom -= 0.1
-                    #self.pos[0] += 1334 * 0.025
-                    #self.pos[1] += 750 * 0.025
+                # if event.key == pygame.K_EQUALS:
+                # self.zoom += 0.1
+                # self.pos[0] -= 1334 * 0.025
+                # self.pos[1] -= 750 * 0.025
+                # elif event.key == pygame.K_MINUS:
+                # self.zoom -= 0.1
+                # self.pos[0] += 1334 * 0.025
+                # self.pos[1] += 750 * 0.025
 
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:
@@ -297,8 +308,19 @@ class Canvas:
                                     # break
                                     pass
                                 size = data[1]
-                                rect = pygame.Rect(data[0][0] * sf, data[0][1] * sf, size[0] * sf,
-                                                   size[1] * sf)
+                                small_rect = False
+                                if data[2] == "button":
+                                    if data[3] in \
+                                            {"more", "drop-down", "info", "small", "view", "war-info", "profile",
+                                             "play"}:
+                                        small_rect = True
+                                if small_rect:
+                                    rect = pygame.Rect((data[0][0] + size[0]//2-20) * sf,
+                                                       (data[0][1] + size[1]//2-20) * sf,
+                                                       40 * sf, 40 * sf)
+                                else:
+                                    rect = pygame.Rect(data[0][0] * sf, data[0][1] * sf, size[0] * sf,
+                                                       size[1] * sf)
                                 if rect.collidepoint(event.pos):
                                     select = [num, data[2]]
                                     sel_size, sel_pos = size, data[0]
@@ -318,38 +340,39 @@ class Canvas:
                                 if rect.collidepoint(event.pos):
                                     print('move')
                                     self.transform = "move"
-                                # Right
-                                rect = pygame.Rect(pos[0] + size[0] - 6, pos[1] + size[1] // 2 - 6, 12, 12)
-                                if rect.collidepoint(event.pos):
-                                    self.transform = "resize-right"
-                                # Left
-                                rect = pygame.Rect(pos[0] - 6, pos[1] + size[1] // 2 - 6, 12, 12)
-                                if rect.collidepoint(event.pos):
-                                    self.transform = "resize-left"
-                                # Top
-                                rect = pygame.Rect(pos[0] + size[0] // 2 - 6, pos[1] - 6, 12, 12)
-                                if rect.collidepoint(event.pos):
-                                    self.transform = "resize-top"
-                                # Bottom
-                                rect = pygame.Rect(pos[0] + size[0] // 2 - 6, pos[1] + size[1] - 6, 12, 12)
-                                if rect.collidepoint(event.pos):
-                                    self.transform = "resize-bottom"
-                                # Top-Left
-                                rect = pygame.Rect(pos[0] - 6, pos[1] - 6, 12, 12)
-                                if rect.collidepoint(event.pos):
-                                    self.transform = "resize-top-left"
-                                # Top-Right
-                                rect = pygame.Rect(pos[0] - 6 + size[0], pos[1] - 6, 12, 12)
-                                if rect.collidepoint(event.pos):
-                                    self.transform = "resize-top-right"
-                                # Bottom-Left
-                                rect = pygame.Rect(pos[0] - 6, pos[1] + size[1] - 6, 12, 12)
-                                if rect.collidepoint(event.pos):
-                                    self.transform = "resize-bottom-left"
-                                # Bottom-Right
-                                rect = pygame.Rect(pos[0] + size[0] - 6, pos[1] + size[1] - 6, 12, 12)
-                                if rect.collidepoint(event.pos):
-                                    self.transform = "resize-bottom-right"
+                                if not self.move_only:
+                                    # Right
+                                    rect = pygame.Rect(pos[0] + size[0] - 6, pos[1] + size[1] // 2 - 6, 12, 12)
+                                    if rect.collidepoint(event.pos):
+                                        self.transform = "resize-right"
+                                    # Left
+                                    rect = pygame.Rect(pos[0] - 6, pos[1] + size[1] // 2 - 6, 12, 12)
+                                    if rect.collidepoint(event.pos):
+                                        self.transform = "resize-left"
+                                    # Top
+                                    rect = pygame.Rect(pos[0] + size[0] // 2 - 6, pos[1] - 6, 12, 12)
+                                    if rect.collidepoint(event.pos):
+                                        self.transform = "resize-top"
+                                    # Bottom
+                                    rect = pygame.Rect(pos[0] + size[0] // 2 - 6, pos[1] + size[1] - 6, 12, 12)
+                                    if rect.collidepoint(event.pos):
+                                        self.transform = "resize-bottom"
+                                    # Top-Left
+                                    rect = pygame.Rect(pos[0] - 6, pos[1] - 6, 12, 12)
+                                    if rect.collidepoint(event.pos):
+                                        self.transform = "resize-top-left"
+                                    # Top-Right
+                                    rect = pygame.Rect(pos[0] - 6 + size[0], pos[1] - 6, 12, 12)
+                                    if rect.collidepoint(event.pos):
+                                        self.transform = "resize-top-right"
+                                    # Bottom-Left
+                                    rect = pygame.Rect(pos[0] - 6, pos[1] + size[1] - 6, 12, 12)
+                                    if rect.collidepoint(event.pos):
+                                        self.transform = "resize-bottom-left"
+                                    # Bottom-Right
+                                    rect = pygame.Rect(pos[0] + size[0] - 6, pos[1] + size[1] - 6, 12, 12)
+                                    if rect.collidepoint(event.pos):
+                                        self.transform = "resize-bottom-right"
 
                                 if self.transform is not None:
                                     # Cancel the selection-switching code if a handle is clicked.

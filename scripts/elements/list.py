@@ -30,9 +30,7 @@ def renderList(element):
 
             elif part[0] == "image":
                 if item[0] is not None:
-                    c.images_used.append(item[0] + ".png")
-                    part_img = pygame.image.load(
-                        'projects/' + c.project_name + '/images/' + item[0] + ".png").convert_alpha()
+                    part_img = c.image_store.get_image('projects/' + c.project_name + '/images/' + item[0] + ".png")
                     size = data[6]//2
                     part_img = scale_image(part_img, size)
                     img.blit(part_img, ((x * mult) + (part[1] * mult // 2) - size//2, y+((85-size)//2)))

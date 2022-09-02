@@ -9,8 +9,10 @@ from scripts.utility.scale_image import scale_image
 def renderButton(element):
     data = c.data["el"][element]
 
-    if data[3] in {"more","drop-down","more","small","view","war-info","profile","play"}:
-        img = pygame.image.load('assets/elements/button/' + data[3] + '.png').convert_alpha()
+    if data[3] in {"more","drop-down","info","small","view","war-info","profile","play"}:
+        img = pygame.Surface(data[1],pygame.SRCALPHA)
+        img2 = pygame.image.load('assets/elements/button/' + data[3] + '.png').convert_alpha()
+        img.blit(img2,(img.get_width()//2-img2.get_width()//2,img.get_height()//2-img2.get_height()//2))
     else:
         # img = size_element('assets/elements/button/' + data[3] + '.png', data[1], edge=(30, 30, 35, 20))
         if data[3] == "custom":
