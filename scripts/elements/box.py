@@ -17,7 +17,7 @@ def renderBox(element):
         img = Surface(data[1], SRCALPHA)
         temp_surf.set_colorkey((255,0,255))
         img.blit(temp_surf,(0,0))
-        box = size_element('assets/elements/box/map.png', data[1], (30, 30, 30, 30))
+        box = c.image_store.get_sized_image('box_map','assets/elements/box/map.png', data[1], (30, 30, 30, 30))
         img.blit(box,(0,0))
 
     elif data[3] == "gradient":
@@ -42,12 +42,14 @@ def renderBox(element):
         img.blit(img2,(10,10))
 
     else:
-        img = size_element('assets/elements/box/custom1.png', data[1], (30, 30, 30, 30))
+        img = c.image_store.get_sized_image('box_solid1','assets/elements/box/custom1.png', data[1], (30, 30, 30, 30))
         img.fill(data[4],special_flags=pygame.BLEND_RGB_ADD)
-        outline = size_element('assets/elements/box/custom2.png', data[1], (30, 30, 30, 30))
+        outline = c.image_store.get_sized_image('box_solid_2','assets/elements/box/custom2.png', data[1], (30, 30, 30, 30))
         # 100, 150, 120
         col = (max(0,200-data[4][0]),max(0,200-data[4][1]),max(0,200-data[4][2]))
         outline.fill(col, special_flags=pygame.BLEND_RGB_SUB)
         img.blit(outline,(0,0))
 
+    opacity = 255-(data[5]/100*255)
+    img.fill((0,0,0,opacity),special_flags=pygame.BLEND_RGBA_SUB)
     return img

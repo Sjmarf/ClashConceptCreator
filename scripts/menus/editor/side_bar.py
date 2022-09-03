@@ -45,7 +45,7 @@ class SideBar:
             c.text_input_active = False
 
             if element == "background":
-                self.elements = [FileInput(data[3], 'assets/backgrounds', ['background', 3],mode="background")]
+                self.elements = [FileInput(data[3], 'assets/backgrounds', ['background', 3], mode="background")]
 
             elif element == "menu":
                 self.elements = [FileInput(data[3], 'assets/foregrounds', [c.selected[0], 3]),
@@ -63,7 +63,7 @@ class SideBar:
                                            label="Font Size", int_only=True, int_min=10),
 
                                  ChoiceInput(data[6], [c.selected[0], 6], 'assets/elements/icon', label="Icon",
-                                             window_width=200, allow_none=True, icon_size=30)]
+                                             window_width=600, allow_none=True, icon_size=30)]
 
                 if data[3] == "custom":
                     self.elements.insert(1, ColourInput(data[7], [name, 7], label="Colour"))
@@ -95,7 +95,7 @@ class SideBar:
                                  ChoiceInput(data[5], [name, 5],
                                              ["left", "centre", "right"], mode="buttons", label="Align"),
                                  ChoiceInput(data[7], [name, 7],
-                                             ["small", "large"], mode="buttons", label="Font"),
+                                             ["small", "small2", "large", "large2"], mode="buttons", label="Font"),
                                  TextInput(str(data[4]), [name, 4],
                                            label="Font Size", int_only=True, int_min=10, convert_int=True),
                                  ]
@@ -106,9 +106,13 @@ class SideBar:
                                  ChoiceInput(data[5], [name, 5],
                                              ["left", "centre", "right"], mode="buttons", label="Align"),
                                  ChoiceInput(data[7], [name, 7],
-                                             ["small", "large"], mode="buttons", label="Font"),
+                                             ["small", "small2", "large", "large2"], mode="buttons", label="Font"),
                                  TextInput(str(data[4]), [name, 4],
                                            label="Font Size", int_only=True, int_min=10, convert_int=True),
+                                 TextInput(str(data[8]), [name, 8],
+                                           label="Icon Size", int_only=True, int_min=10, convert_int=True),
+                                 TextInput(str(data[9]), [name, 9],
+                                           label="Line Spacing", int_only=True, int_min=10, convert_int=True),
                                  ]
 
             elif element == "list":
@@ -147,9 +151,26 @@ class SideBar:
             elif element == "box":
                 self.elements = [ChoiceInput(data[3], [name, 3],
                                              ["solid", "gradient", "highlight", "map"],
-                                             mode="buttons", label="Type")]
+                                             mode="buttons", label="Type"),
+                                 TextInput(str(data[5]), [name, 5],
+                                           label="Opacity", int_only=True, int_min=10, convert_int=True)]
                 if data[3] != "map":
                     self.elements.insert(1, ColourInput(data[4], [name, 4], label="Colour"))
+
+            elif element == "player info":
+
+                self.elements = [SubmenuButton("Set Image", "image", width=150, path=[name, 3]),
+                                 TextInput(data[4], [name, 4], label="Name"),
+                                 TextInput(data[5], [name, 5], label="Clan"),
+                                 TextInput(data[6], [name, 6], label="Header"),
+                                 ChoiceInput(data[7], [name, 7],
+                                             ["left", "right"], mode="buttons", label="Align")]
+
+            elif element == "stars":
+
+                self.elements = [ChoiceInput(data[3], [name, 3],
+                                             ["0", "1", "2", "3"], mode="buttons", label="Number"),
+                                 TextInput(data[4], [name, 4], label="Damage")]
 
             self.advanced_elements = [TextInput(str(data[0][0]), [name, 0, 0],
                                                 label="Pos x", int_only=True, int_min=0, convert_int=True),
@@ -269,11 +290,11 @@ class SideBar:
                             # Get average spacing between elements
                             for el in c.multi_select_elements[:-1]:
                                 if prev is None:
-                                    prev = c.data["el"][el][1][0]+c.data["el"][el][0][0]
+                                    prev = c.data["el"][el][1][0] + c.data["el"][el][0][0]
                                 else:
                                     avg += c.data["el"][el][0][0] - prev
-                                    prev = c.data["el"][el][1][0]+c.data["el"][el][0][0]
-                            avg /= len(c.multi_select_elements)-1
+                                    prev = c.data["el"][el][1][0] + c.data["el"][el][0][0]
+                            avg /= len(c.multi_select_elements) - 1
 
                             start_pos = c.data["el"][c.multi_select_elements[0]][0][0]
                             prev_width = 0
@@ -289,11 +310,11 @@ class SideBar:
                             # Get average spacing between elements
                             for el in c.multi_select_elements:
                                 if prev is None:
-                                    prev = c.data["el"][el][1][1]+c.data["el"][el][0][1]
+                                    prev = c.data["el"][el][1][1] + c.data["el"][el][0][1]
                                 else:
                                     avg += c.data["el"][el][0][1] - prev
-                                    prev = c.data["el"][el][1][1]+c.data["el"][el][0][1]
-                            avg /= len(c.multi_select_elements)-1
+                                    prev = c.data["el"][el][1][1] + c.data["el"][el][0][1]
+                            avg /= len(c.multi_select_elements) - 1
 
                             start_pos = c.data["el"][c.multi_select_elements[0]][0][1]
                             prev_width = 0

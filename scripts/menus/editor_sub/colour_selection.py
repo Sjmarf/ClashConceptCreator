@@ -53,6 +53,7 @@ class ColourSelection:
             (229, 229, 178),  # Button Cream (chat send button)
             (46, 147, 207),  # Button cyan
             (158, 229, 106),  # Text green
+            (254, 253, 165),  # Text light yellow
             (214, 209, 146),  # Chat text player name
             (119, 119, 111),  # Chat text player role
             (51, 92, 155),  # Troop description text blue

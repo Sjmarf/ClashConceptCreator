@@ -36,7 +36,7 @@ class NewProject:
             x += 230
             if x > c.width - 450:
                 x = 20
-                y += 150
+                y += 160
 
     def event(self, event, pos):
         rect = pygame.Rect((20, 80, 200, 150))
@@ -53,7 +53,7 @@ class NewProject:
             x += 230
             if x > c.width - 450:
                 x = 20
-                y += 150
+                y += 160
 
     def new_project(self, template):
         print(template)

@@ -1,18 +1,44 @@
+from scripts import common as c
 from scripts.utility.file_manager import loadJson, saveJson
 
 
 def update_project(name):
-    update_01_to_02(name)
+    data = loadJson(name + '/data.json')
+    if data["version"] in c.settings["supported_versions"]:
+        if data["version"] != c.VERSION:
+            print("Updating "+name+"...")
+            if data["version"] == "0.1":
+                update_01_to_02(name, data)
+            if data["version"] == "0.2":
+                update_02_to_03(name, data)
+    else:
+        print("ERROR: Attempted to convert project, but version number is unsupported")
+        from scripts.menus.menus.project_load_error import ProjectLoadError
+        c.menu = ProjectLoadError(ver=c.data["version"],supported="supported_versions")
 
+def update_02_to_03(name,data):
+    data["version"] = "0.3"
+    for element in data["el"]:
+        # Add 'icon size' and 'line spacing' parameters to text block
+        if element[2] == "text block":
+            if len(element) < 9:
+                element.append(100)
+                element.append(100)
+        # Add 'opacity' parameter to box
+        if element[2] == "box":
+            if len(element) < 6:
+                element.append(100)
 
-def update_01_to_02(name):
-    data = loadJson('projects/' + name + '/data.json')
+    saveJson(name + '/data.json', data)
+    print("Updated to v0.3")
+
+def update_01_to_02(name,data):
     data["version"] = "0.2"
 
     for element in data["el"]:
         # Add 'font' parameter to text block
         if element[2] == "text block":
-            if len(element) < 7:
+            if len(element) < 8:
                 element.append(small)
         # Rename 'cyan' button to 'light blue'
         elif element[2] == "button":
@@ -28,7 +54,7 @@ def update_01_to_02(name):
 
     # Add update_speed.json
     from shutil import copyfile
-    copyfile('templates/blank/update_speed.json','projects/' + name + '/update_speed.json')
+    copyfile('templates/blank/update_speed.json',name + '/update_speed.json')
 
-    saveJson('projects/' + name + '/data.json',data)
-    print("CONVERTED")
+    saveJson(name + '/data.json',data)
+    print("Updated to v0.2")

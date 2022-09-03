@@ -10,18 +10,19 @@ class ImageStore:
     def __init__(self):
         icon_list = [("trophy", "🏆"), ("trophy2", "🏺"), ("trophy3","💜"),("xp", "✹"), ("town_hall", "🏛"),
                      ("builder_potion", "🍷"), ("research_potion", "🔎"),
-                     ("gold", "💰"),("elixir", "💧"),("builder_gold", "🪙"),("builder_elixir", "🩸"),
+                     ("gold", "💰"),("elixir", "💧"),("dark_elixir","🖤"),("builder_gold", "🪙"),
+                     ("builder_elixir", "🩸"),
                      ("gem", "💎"),("capital_gold", "🪞"), ("raid_medal", "🎖"), ("league_medal","🥇"),
                      ("donation", "👨"), ("preview", "👁"), ("view","👀"), ("profile", "👤"),
                      ("raid_log", "📗"), ("war_log", "📕"), ("stats","📈"), ("random", "🎲"), ("stopwatch", "🕰"),
                      ("war","🤺"),("swords","🔪"),("sword", "🗡"), ("spell", "🍹"), ("siege_machine", "🚗"),
                      ("challenge","🟧"),("friend","👯"),("edit","🖊"),("request","👥"),("builder","😁"),
                      ("chat","💬"), ("base_design","📝"),("calendar","🗓"), ("shield","🛡"),("star","🌟"),
-                     ("hammer","🔨"),("clan","🏘"),
+                     ("hammer","🔨"),("clan","🏘"),("world","🌎"),
                      ("health", "❤"),("damage", "💥"),("attack_speed","💨"),("skeletons","💀"),("deploy","🫡"),
                      ("info","🟦"),("cross","❌"),("hashtag","🏁"),("share", "👉"),("home","🏠"),
                      ("arrow_up","🔼"), ("arrrow_down","🔽"),("arrow_back","🔙"),("tick","✅"),("cross2","💔"),
-                     ("up_down","🔃")]
+                     ("up_down","🔃"), ("play","🟢"),("pause","🛑")]
         self.icons2 = {}  # key = name
         self.icons = {}  # key = emoji
         for name, emoji in icon_list:

@@ -19,6 +19,8 @@ from scripts.elements.chat import renderChat
 from scripts.elements.menu import renderMenu
 from scripts.elements.stat_list import renderStatList
 from scripts.elements.stat_bars import renderStatBars
+from scripts.elements.stars import renderStars
+from scripts.elements.player_info import renderPlayerInfo
 
 
 class Canvas:
@@ -68,7 +70,9 @@ class Canvas:
                       "list": renderList,
                       "chat": renderChat,
                       "stat list": renderStatList,
-                      "stat bars": renderStatBars}
+                      "stat bars": renderStatBars,
+                      "player info": renderPlayerInfo,
+                      "stars":renderStars}
 
         draw_dark = False
         for element in range(len(data)):
@@ -176,8 +180,8 @@ class Canvas:
                                               self.selection_size[0] * sf * self.zoom,
                                               self.selection_size[1] * sf * self.zoom), 2)
                         else:
-                            canvas.blit(self.node_img, (abs_pos[0] - 6 + self.selection_size[0] // 4,
-                                                        abs_pos[1] - 6 + self.selection_size[1] // 4))
+                            canvas.blit(self.node_img, (abs_pos[0] - 6 + self.selection_size[0]*sf // 2,
+                                                        abs_pos[1] - 6 + self.selection_size[1]*sf // 2))
 
                     elif 'resize' in self.transform:
                         borders = [pos[0], pos[1], size[0], size[1]]
@@ -338,7 +342,6 @@ class Canvas:
                                 # Centre
                                 rect = pygame.Rect(pos[0] + size[0] // 2 - 6, pos[1] + size[1] // 2 - 6, 12, 12)
                                 if rect.collidepoint(event.pos):
-                                    print('move')
                                     self.transform = "move"
                                 if not self.move_only:
                                     # Right
@@ -398,7 +401,7 @@ class Canvas:
     def post_transform(self):
         min_size = (70, 55)
         if c.selected is not None:
-            if c.selected[1] in {"text block", "text"}:
+            if c.selected[1] in {"text block", "text", "stars"}:
                 min_size = (5, 5)
 
         if self.transform is not None:
