@@ -27,7 +27,7 @@ class TabEditor:
         for num, item in enumerate(self.data):
             if c.data["el"][self.element][5] == "2":
                 self.row_inputs.append(ChoiceInput(item, [c.selected[0], 3, num], 'assets/elements/icon',
-                                                   window_width=200, allow_none=True, submenu_layer=2, icon_size=30))
+                                                   window_width=600, allow_none=True, submenu_layer=2, icon_size=30))
             else:
                 self.row_inputs.append(TextInput(item, None))
 

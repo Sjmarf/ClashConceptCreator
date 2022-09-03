@@ -17,6 +17,7 @@ class DevMenu:
         self.version_number = TextInput(c.VERSION, None, label="Version Number", width=300, no_editor=True)
         self.version_update_button = Button("Update All", width=300)
         self.prep_button = Button("Prep for commit", width=300)
+        self.update_templates_button = Button("Update Templates", width=300)
 
         self.back_button = Button("< Back", width=100)
 
@@ -29,7 +30,8 @@ class DevMenu:
 
         self.version_number.render(self.surf, (centre - 150, 120))
         self.version_update_button.render(self.surf, (centre - 150, 190))
-        self.prep_button.render(self.surf, (centre - 150, 290))
+        self.update_templates_button.render(self.surf, (centre-150,230))
+        self.prep_button.render(self.surf, (centre - 150, 350))
 
         c.display.blit(self.surf, (250, 0))
 
@@ -52,6 +54,14 @@ class DevMenu:
             from scripts.menus.main_menu_sub.settings import Settings
             c.menu.content = Settings()
             return
+
+        if self.update_templates_button.click(event,pos):
+            print("-----------\nUpdating templates...")
+            from scripts.utility.project_updater import update_project
+            for template in getFileList('templates'):
+                update_project('templates/'+template)
+            print("DONE")
+
 
         if self.prep_button.click(event, pos):
             print("-----------\nPrepping for release...")
@@ -100,11 +110,11 @@ class DevMenu:
                     saveJson('projects/' + proj + '/data.json', data)
                     print('updated project ' + proj)
 
-            print("TEMPLATES\n--------")
-            for template in getFileList('templates'):
-                data = loadJson('templates/' + template + '/data.json')
-                data["version"] = ver
-                saveJson('templates/' + template + '/data.json', data)
-                print("Updated template " + template)
+            #print("TEMPLATES\n--------")
+            #for template in getFileList('templates'):
+                #data = loadJson('templates/' + template + '/data.json')
+                #data["version"] = ver
+                #saveJson('templates/' + template + '/data.json', data)
+                #print("Updated template " + template)
 
             print("DONE")

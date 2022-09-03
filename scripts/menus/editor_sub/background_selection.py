@@ -9,7 +9,8 @@ class BackgroundSelection:
     def __init__(self):
         self.surf = pygame.Surface((c.width - 100, c.height - 100), pygame.SRCALPHA)
 
-        self.files = ["Home Village.png","Builder Base.png","Clan Capital.png","Capital Peak.png","Green.png",
+        self.files = ["Home Village.png","Home Village2.png","Builder Base.png","Clan Capital.png","Capital Peak.png",
+                      "Green.png",
                       "Blue-Green.png","Peaceful.png","Wood.png"]
         self.icons = {}
         self.page_icons = []
@@ -24,7 +25,8 @@ class BackgroundSelection:
         self.page = page
         if page == 0:
             self.page_button = Button("Page: Clash of Clans", width=300)
-            self.page_icons = ["Home Village.png","Builder Base.png","Clan Capital.png","Capital Peak.png"]
+            self.page_icons = ["Home Village.png","Home Village2.png","Builder Base.png","Clan Capital.png",
+                               "Capital Peak.png"]
         else:
             self.page_button = Button("Page: Colours", width=300)
             self.page_icons = ["Green.png", "Blue-Green.png", "Peaceful.png", "Wood.png"]

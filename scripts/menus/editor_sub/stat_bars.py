@@ -19,7 +19,7 @@ class StatBarsEditor:
         for num,row in enumerate(self.data):
             self.rows.append([
                 ChoiceInput(row[0], [c.selected[0], 3, num, 0], 'assets/elements/icon',
-                            window_width=200, allow_none=True, submenu_layer=2, icon_size=30),
+                            window_width=600, allow_none=True, submenu_layer=2, icon_size=30),
                 TextInput(row[1], None, width=200),
                 TextInput(str(row[2]), None, width=80, int_only=True, int_min=0, convert_int=True),
                 TextInput(str(row[3]), None, width=80, int_only=True, int_min=0, convert_int=True),

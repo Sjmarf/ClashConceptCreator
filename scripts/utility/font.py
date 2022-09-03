@@ -29,7 +29,7 @@ def renderText(text, preset, size, font_type='large', border=0, thickness=0, col
 
     if preset != "custom":
         presets = {
-            "default": ('large', max(1.1, size / 25), size // 6.25, (255, 255, 255), (0, 0, 0)),
+            "default": ('large', max(1.1, size / 25), max(3,size // 6.25), (255, 255, 255), (0, 0, 0)),
             "small1": ('small', 0, 0, (131, 129, 118), (0, 0, 0)),
             "small2": ('small', 0, 0, (107, 104, 95), (0, 0, 0))
         }
@@ -37,7 +37,7 @@ def renderText(text, preset, size, font_type='large', border=0, thickness=0, col
 
     smoothscale_size_method = True  # Set to True to enable experimental method of sizing the text, to remove
     # undesirable effects when using very small text
-    smoothscale_orig_size = 50
+    smoothscale_orig_size = size*2
     keys = pygame.key.get_pressed()
     if keys[pygame.K_p]:
         smoothscale_size_method = False
@@ -78,7 +78,7 @@ def renderText(text, preset, size, font_type='large', border=0, thickness=0, col
         test_surf = test_font.render(text,True,(0,0,0))
         width,height = test_surf.get_size()
         x_offset = (offset/smoothscale_orig_size)*size*2
-        y_offset = x_offset+(orig_thickness)/50*size/1.2
+        y_offset = x_offset+(orig_thickness)/smoothscale_orig_size*size/1.2
         surf = pygame.transform.smoothscale(main_surf, (width+x_offset,
                                                              height+y_offset))
         main_surf = pygame.Surface((width+offset*2-x_offset,height+offset*2-y_offset+orig_thickness),pygame.SRCALPHA)

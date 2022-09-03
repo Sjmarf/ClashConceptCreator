@@ -32,6 +32,6 @@ def renderTabs(element):
 
         else:
             text_surf = renderText(data[3][tab], "default", 22)
-            img.blit(text_surf,(x+half-text_surf.get_width()//2, 16))
+            img.blit(text_surf,(x+half-text_surf.get_width()//2, 20))
 
     return img

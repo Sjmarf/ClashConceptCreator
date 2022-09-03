@@ -43,7 +43,7 @@ class ProjectUpdate:
 
             if self.convert_button.click(event,event.pos):
                 from scripts.utility.project_updater import update_project
-                update_project(self.project_name)
+                update_project('projects/'+self.project_name)
 
                 c.data = loadJson('projects/' + self.project_name + '/data.json')
                 from scripts.menus.menus.editor import Editor

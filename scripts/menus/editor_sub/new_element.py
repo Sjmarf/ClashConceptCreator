@@ -5,11 +5,11 @@ from scripts import common as c
 class NewElement:
     def __init__(self, pos):
         self.pos = (pos[0], pos[1] - 300)
-        self.surf = pygame.Surface((400, 380), pygame.SRCALPHA)
+        self.surf = pygame.Surface((600, 380), pygame.SRCALPHA)
         self.preview_surf = pygame.Surface((256, 256), pygame.SRCALPHA)
 
         self.names = ['menu', 'box', 'image', 'text', 'text block', 'button', 'grid', 'tabs', 'list', 'chat',
-                      'stat list', 'stat bars']
+                      'stat list', 'stat bars', 'player info', 'stars']
         self.icons = []
         for name in self.names:
             self.icons.append((pygame.image.load('assets/editor_gui/icons/' + name + '.png').convert_alpha(),
@@ -40,7 +40,7 @@ class NewElement:
 
         c.display.blit(self.surf, self.pos)
         if self.hovered is not None:
-            c.display.blit(self.preview_surf, (self.pos[0] + 430, self.pos[1]))
+            c.display.blit(self.preview_surf, (self.pos[0] + 620, self.pos[1]))
 
     def event(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
@@ -61,10 +61,10 @@ class NewElement:
             "image": [[0, 0], [200, 200], "image", None, 100],
             # Text, font size, align, colour, font
             "text": [[0, 0], [200, 60], "text", "Text", 25, "centre", [255, 255, 255], "large"],
-            # Type
-            "box": [[0, 0], [400, 400], "box", "solid", [206, 201, 195]],
-            # Text, font size, align, text colour, font
-            "text block": [[0, 0], [300, 300], "text block", "", 25, "left", [255, 255, 255], "small"],
+            # Type, colour, opacity
+            "box": [[0, 0], [400, 400], "box", "solid", [206, 201, 195], 100],
+            # Text, font size, align, text colour, font, icon size, line spacing
+            "text block": [[0, 0], [300, 300], "text block", "", 25, "left", [255, 255, 255], "small", 100, 100],
             # Tabs, selected #, Type
             "tabs": [[0, 0], [700, 100], "tabs", ["Tab1"], 0, "1"],
             # Layout (type, size in %, divider on/off), Items, Empty row (used when a new row is added), image size
@@ -76,7 +76,12 @@ class NewElement:
             # entries, left col, right col, left font, right font, left font size, right font size
             "stat list": [[0, 0], [450, 250], "stat list", [["stat","value"]],[51, 92, 155],[50,50,50],"small","large",20,20],
             # Items
-            "chat": [[0, 0], [700, 400], "chat", [[None, "Joseph", "Member", "2m", "Text"]]]}
+            "chat": [[0, 0], [700, 400], "chat", [[None, "Joseph", "Member", "2m", "Text"]]],
+            # name, clan, image, subtitle, align
+            "player info": [[0, 0], [250, 100], "player info", None,"Name","Clan","","left"],
+            # number of stars, text, type
+            "stars": [[0, 0], [200, 50], "stars", "3", "100%", "small"]
+        }
 
 
         data = defaults[name]
