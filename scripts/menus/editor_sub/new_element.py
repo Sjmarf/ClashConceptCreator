@@ -72,7 +72,7 @@ class NewElement:
             # Type, items (image name, label)
             "icon list": [[0, 0], [300, 100], "icon list", 1, [[None, 1]]],
             # entries, bar col
-            "stat bars": [[0, 0], [450, 250], "stat bars", [["stopwatch","",0,100]], [144,216,56], 31],
+            "stat bars": [[0, 0], [450, 250], "stat bars", [[None,"",0,100]], [144,216,56], 31],
             # entries, left col, right col, left font, right font, left font size, right font size
             "stat list": [[0, 0], [450, 250], "stat list", [["stat","value"]],[51, 92, 155],[50,50,50],"small","large",20,20],
             # Items
@@ -80,7 +80,7 @@ class NewElement:
             # name, clan, image, subtitle, align
             "player info": [[0, 0], [250, 100], "player info", None,"Name","Clan","","left"],
             # number of stars, text, type
-            "stars": [[0, 0], [200, 50], "stars", "3", "100%", "small"]
+            "stars": [[0, 0], [200, 50], "stars", "3", "", "small"]
         }
 
 

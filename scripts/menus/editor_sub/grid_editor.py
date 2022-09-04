@@ -5,7 +5,7 @@ from scripts.editor_objects.small_button import SmallButton
 from scripts.editor_objects.text_input import TextInput
 from scripts.menus.editor_sub.image_selection import ImageSelection
 from scripts.utility.scale_image import scale_image
-from scripts.utility.file_manager import getFileList
+from scripts.utility.file_manager import get_file_list
 from _thread import start_new_thread
 
 
@@ -87,7 +87,7 @@ class GridEditor:
                             if box[0] in self.cached_images:
                                 img = self.cached_images[box[0]]
                             else:
-                                if box[0]+'.png' in getFileList('projects/'+c.project_name+'/images/'):
+                                if box[0]+'.png' in get_file_list('projects/' + c.project_name + '/images/'):
                                     img = pygame.image.load(
                                         'projects/'+c.project_name+'/images/'+box[0]+'.png').convert_alpha()
                                     img = scale_image(img, (30, 30))
@@ -163,7 +163,7 @@ class GridEditor:
             self.need_preview = False
         else:
             image_name += ".png"
-            if image_name in getFileList('projects/' + c.project_name + '/images'):
+            if image_name in get_file_list('projects/' + c.project_name + '/images'):
                 self.need_preview = False
                 img = pygame.image.load('projects/' + c.project_name + '/images/'+image_name)
                 self.box_preview = scale_image(img, 110)

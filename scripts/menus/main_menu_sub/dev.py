@@ -5,7 +5,7 @@ import os
 from scripts import common as c
 from scripts.editor_objects.button import Button
 from scripts.editor_objects.text_input import TextInput
-from scripts.utility.file_manager import saveJson, loadJson, getFileList
+from scripts.utility.file_manager import save_json, load_json, get_file_list
 
 
 class DevMenu:
@@ -58,7 +58,7 @@ class DevMenu:
         if self.update_templates_button.click(event,pos):
             print("-----------\nUpdating templates...")
             from scripts.utility.project_updater import update_project
-            for template in getFileList('templates'):
+            for template in get_file_list('templates'):
                 update_project('templates/'+template)
             print("DONE")
 
@@ -66,7 +66,7 @@ class DevMenu:
         if self.prep_button.click(event, pos):
             print("-----------\nPrepping for release...")
 
-            saveJson('projects/projects.json', [])
+            save_json('projects/projects.json', [])
             self.del_folder_contents('projects')
             print("Deleted projects")
 
@@ -77,7 +77,7 @@ class DevMenu:
             print("Deleted local images")
 
             c.settings["dev_mode"] = False
-            saveJson("data/settings.json", c.settings)
+            save_json("data/settings.json", c.settings)
             print("Disabled developer mode")
             print("DONE")
 
@@ -88,26 +88,26 @@ class DevMenu:
                 c.settings['supported_versions'].append(ver)
             c.settings['version'] = ver
             c.VERSION = ver
-            saveJson('data/settings.json', c.settings)
+            save_json('data/settings.json', c.settings)
             print("Updated settings.json")
             # Update projects
 
-            proj_list = loadJson('projects/projects.json')
+            proj_list = load_json('projects/projects.json')
             print("PROJECTS\n--------")
             for proj in proj_list:
                 if type(proj) == list:
                     print("FOLDER " + proj[0])
                     for sub_proj in proj[1:]:
-                        data = loadJson('projects/' + proj[0] + '/' + sub_proj + '/data.json')
+                        data = load_json('projects/' + proj[0] + '/' + sub_proj + '/data.json')
                         data["version"] = ver
-                        saveJson('projects/' + proj[0] + '/' + sub_proj + '/data.json', data)
+                        save_json('projects/' + proj[0] + '/' + sub_proj + '/data.json', data)
                         print('updated project ' + sub_proj)
                     print("END FOLDER")
 
                 else:
-                    data = loadJson('projects/' + proj + '/data.json')
+                    data = load_json('projects/' + proj + '/data.json')
                     data["version"] = ver
-                    saveJson('projects/' + proj + '/data.json', data)
+                    save_json('projects/' + proj + '/data.json', data)
                     print('updated project ' + proj)
 
             #print("TEMPLATES\n--------")

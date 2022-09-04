@@ -21,8 +21,8 @@ class ImageStore:
                      ("hammer","🔨"),("clan","🏘"),("world","🌎"),
                      ("health", "❤"),("damage", "💥"),("attack_speed","💨"),("skeletons","💀"),("deploy","🫡"),
                      ("info","🟦"),("cross","❌"),("hashtag","🏁"),("share", "👉"),("home","🏠"),
-                     ("arrow_up","🔼"), ("arrrow_down","🔽"),("arrow_back","🔙"),("tick","✅"),("cross2","💔"),
-                     ("up_down","🔃"), ("play","🟢"),("pause","🛑")]
+                     ("arrow_up","🔼"), ("arrrow_down","🔽"),("arrow_left","↞"),("arrow_right","➡"),
+                     ("arrow_back","🔙"),("tick","✅"),("cross2","💔"),("up_down","🔃"), ("play","🟢"),("pause","🛑")]
         self.icons2 = {}  # key = name
         self.icons = {}  # key = emoji
         for name, emoji in icon_list:
@@ -44,6 +44,22 @@ class ImageStore:
             try:
                 img = pygame.image.load(path).convert_alpha()
                 self.element_images[path] = img
+            except FileNotFoundError:
+                img = pygame.image.load('assets/editor_gui/error.png').convert_alpha()
+            return img
+
+    def get_scaled_image(self, path, scale):
+        name = path+" "+str(scale)
+        self.element_images_used.append(name)
+        c.images_used.append(path.split("/")[-1])
+        if name in self.element_images.keys():
+            return self.element_images[name]
+        else:
+            print("Loaded scaled image to image store: ", path)
+            try:
+                img = pygame.image.load(path).convert_alpha()
+                img = scale_image(img,scale)
+                self.element_images[name] = img
             except FileNotFoundError:
                 img = pygame.image.load('assets/editor_gui/error.png').convert_alpha()
             return img

@@ -1,6 +1,6 @@
 import pygame
 from scripts import common as c
-from scripts.utility.file_manager import getFileList
+from scripts.utility.file_manager import get_file_list
 from scripts.utility.scale_image import scale_image
 from scripts.editor_objects.submenu_button import SubmenuButton
 from scripts.editor_objects.button import Button
@@ -82,7 +82,7 @@ class ChatEditor:
         c.display.blit(self.surf, (50, 50))
 
         if self.need_preview:
-            if self.image_name + ".png" in getFileList('projects/' + c.project_name + '/images'):
+            if self.image_name + ".png" in get_file_list('projects/' + c.project_name + '/images'):
                 img = pygame.image.load('projects/' + c.project_name + '/images/' + self.image_name + ".png")
                 self.preview_img = scale_image(img, 130)
                 self.need_preview = False

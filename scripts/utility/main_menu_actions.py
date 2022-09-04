@@ -1,11 +1,11 @@
-from scripts.utility.file_manager import getFileList,saveJson,loadJson
+from scripts.utility.file_manager import get_file_list,save_json,load_json
 
 
 def duplicate(data,name):
     from shutil import copytree,ignore_patterns
     num = 2
     new_name = name + str(num)
-    while new_name in getFileList('projects/'):
+    while new_name in get_file_list('projects/'):
         new_name = name + str(num)
         num += 1
     copytree('projects/' + name, 'projects/' + new_name, ignore=ignore_patterns(".DS_Store"))
@@ -19,7 +19,7 @@ def duplicate(data,name):
             if type(item) == list:
                 if item[0] == folder:
                     item.append(new_name.split("/")[1])
-    saveJson('projects/projects.json', data)
+    save_json('projects/projects.json', data)
 
 def delete(data,name):
     import shutil
@@ -62,4 +62,4 @@ def delete(data,name):
             shutil.rmtree('projects/' + name)
         else:
             print("Deletion index error: File not found")
-    saveJson('projects/projects.json', data)
+    save_json('projects/projects.json', data)

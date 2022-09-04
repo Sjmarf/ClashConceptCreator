@@ -3,7 +3,7 @@ import pygame
 from scripts import common as c
 from scripts.editor_objects.text_input import TextInput
 from scripts.editor_objects.button import Button
-from scripts.utility.file_manager import loadJson,special_indent_save_json
+from scripts.utility.file_manager import load_json,special_indent_save_json
 from scripts.utility.scale_image import scale_image
 import requests
 import io
@@ -13,8 +13,8 @@ from _thread import start_new_thread
 class NewAssetPackEntry:
     def __init__(self, pack):
         self.pack = pack
-        self.data = loadJson('asset packs/' + pack + '/search_data.json')
-        self.image_json = loadJson('asset packs/' + pack + '/images.json')
+        self.data = load_json('asset packs/' + pack + '/search_data.json')
+        self.image_json = load_json('asset packs/' + pack + '/images.json')
         self.back_button = Button("< Back", width=100)
         self.title = c.editor_font.render("New image for " + pack, True, (200, 200, 205))
         self.url_input = TextInput("", None, width=c.width - 160, empty="url", no_editor=True)
@@ -97,7 +97,7 @@ class NewAssetPackEntry:
                 self.suggestion = None
                 print(name)
                 if name[-1] in {"0","1","2","3","4","5","6","7","8","9"}:
-                    if name[-2] is not " ":
+                    if name[-2] != " ":
                         self.suggestion = name[:-2] + str(int(name[-2:])+1)
                     else:
                         self.suggestion = name[:-1] + str(int(name[-1])+1)

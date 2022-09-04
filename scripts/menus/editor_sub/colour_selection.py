@@ -1,6 +1,6 @@
 import pygame
 from scripts import common as c
-from scripts.utility.file_manager import getFileList
+from scripts.utility.file_manager import get_file_list
 from scripts.editor_objects.button import Button
 from scripts.editor_objects.small_button import SmallButton
 from _thread import start_new_thread

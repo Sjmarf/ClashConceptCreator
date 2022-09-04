@@ -1,5 +1,5 @@
 from scripts import common as c
-from scripts.utility.file_manager import loadJson, getFileList
+from scripts.utility.file_manager import load_json, get_file_list
 from scripts.utility.scale_image import scale_image
 from scripts.utility.size_element import size_element
 from scripts.editor_objects.button import Button
@@ -21,7 +21,7 @@ class ImageWindow:
 
         image_name = c.data["el"][self.path[0]][self.path[1]]
         if image_name is not None:
-            if image_name + ".png" in getFileList('projects/' + c.project_name + '/images'):
+            if image_name + ".png" in get_file_list('projects/' + c.project_name + '/images'):
                 img = pygame.image.load('projects/' + c.project_name + '/images/' + image_name + ".png")
                 self.preview_img = scale_image(img, 250)
             else:
@@ -63,7 +63,7 @@ class ImageWindow:
                 if self.image_pack == "LOCAL":
                     col = (155, 242, 114)
                 else:
-                    asset_pack_data = loadJson('asset packs/' + self.image_pack + '/search_data.json')
+                    asset_pack_data = load_json('asset packs/' + self.image_pack + '/search_data.json')
                     col = asset_pack_data["label_colour"]
                 text_surf = c.editor_font.render(self.image_pack, True, col)
                 self.surf.blit(text_surf, (150 - text_surf.get_width() // 2, 340 + asset_pack_y_offset))
@@ -71,7 +71,7 @@ class ImageWindow:
         c.display.blit(self.surf, (50, 50))
 
         if self.need_preview:
-            if self.image_name + ".png" in getFileList('projects/' + c.project_name + '/images'):
+            if self.image_name + ".png" in get_file_list('projects/' + c.project_name + '/images'):
                 img = pygame.image.load('projects/' + c.project_name + '/images/' + self.image_name + ".png")
                 self.preview_img = scale_image(img, 250)
                 self.need_preview = False
@@ -124,7 +124,7 @@ class ImageSelection:
 
     def load_from_json(self, num, search_words, pack_name, prefix, suffix, ignore_if_already_extension):
         start = current_time()
-        data = loadJson('asset packs/' + pack_name + '/images.json')
+        data = load_json('asset packs/' + pack_name + '/images.json')
         keys = data.keys()
         keys = list(filter(lambda x: all(search in x.lower() for search in search_words), keys))
         print("JSON load time:" + str(round(current_time() - start, 4)))
@@ -158,7 +158,7 @@ class ImageSelection:
         return None
 
     def load_from_path(self, search_words, path, pack_name):
-        local = getFileList(path)
+        local = get_file_list(path)
         local = list(filter(lambda x: all(search in x.lower() for search in search_words), local))
         for name in local:
             img = pygame.image.load(path + "/" + name).convert_alpha()
@@ -176,21 +176,23 @@ class ImageSelection:
         search_term = self.search_term.lower()
         search_words = search_term.split(" ")
 
+        # Get list of enabled asset packs
+        enabled_packs = load_json('asset packs/enabled_packs.json')
+
         # Load images from local
         self.load_from_path(search_words, 'local images', "LOCAL")
         # Load images from URL
 
-        packs_list = getFileList('asset packs')
-        for pack in packs_list:
+        for pack in enabled_packs:
             if pack != ".gitkeep":
+                self.load_from_path(search_words, 'asset packs/' + pack + '/local', pack)
                 if not self.connection_error:
-                    data = loadJson('asset packs/' + pack + '/search_data.json')
+                    data = load_json('asset packs/' + pack + '/search_data.json')
                     output = self.load_from_json(num, search_words, pack,
                                                  data["prefix"], data["suffix"], data["remove_suffix_if_provided"])
                     if output:
                         print('Killed previous thread')
                         return None
-                self.load_from_path(search_words, 'asset packs/' + pack + '/local', pack)
 
         if num == self.search_num:
             self.loading = False
@@ -253,11 +255,11 @@ class ImageSelection:
                 img = pygame.image.load('local images/' + name + ".png")
                 filename_prefix = "LOC- "
             else:
-                asset_pack_data = loadJson('asset packs/' + data[3] + '/search_data.json')
+                asset_pack_data = load_json('asset packs/' + data[3] + '/search_data.json')
                 filename_prefix = asset_pack_data["abbreviation"] + "- "
                 img = pygame.image.load('asset packs/' + data[3] + '/local/' + name + ".png")
         else:
-            asset_pack_data = loadJson('asset packs/' + data[3] + '/search_data.json')
+            asset_pack_data = load_json('asset packs/' + data[3] + '/search_data.json')
             if type(data[2]) != str:
                 size, url = data[2][1:], data[2][0]
             else:
@@ -313,7 +315,7 @@ class ImageSelection:
                             if data[3] == "LOCAL":
                                 data.append("LOC- ")
                             else:
-                                asset_pack_data = loadJson('asset packs/' + data[3] + '/search_data.json')
+                                asset_pack_data = load_json('asset packs/' + data[3] + '/search_data.json')
                                 data.append(asset_pack_data["abbreviation"] + "- ")
                             return data
                         x += 60

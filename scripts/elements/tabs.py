@@ -2,6 +2,7 @@ from scripts import common as c
 from scripts.utility.size_element import size_element
 from scripts.utility.scale_image import scale_image
 from scripts.utility.font import renderText
+from scripts.utility.file_manager import get_file_list
 import pygame
 
 
@@ -24,9 +25,9 @@ def renderTabs(element):
         if data[5] == "2":
             if data[3][tab] is not None and data[3][tab] != "":
                 try:
-                    icon = pygame.image.load('assets/elements/icon/'+data[3][tab]+'.png').convert_alpha()
-                    icon = scale_image(icon,40)
-                    img.blit(icon, (x + half - icon.get_width()//2, 20))
+                    if data[3][tab]+'.png' in get_file_list('projects/'+c.project_name+'/images'):
+                        icon = c.image_store.get_scaled_image('projects/'+c.project_name+'/images/'+data[3][tab]+'.png',40)
+                        img.blit(icon, (x + half - icon.get_width()//2, 20))
                 except FileNotFoundError:
                     pass
 

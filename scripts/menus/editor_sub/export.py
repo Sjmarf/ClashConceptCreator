@@ -3,13 +3,13 @@ from scripts import common as c
 from scripts.editor_objects.text_input import TextInput
 from scripts.editor_objects.choice_input import ChoiceInput
 from scripts.editor_objects.button import Button
-from scripts.utility.file_manager import saveJson, loadJson
+from scripts.utility.file_manager import save_json, load_json
 from scripts.utility import font
 
 
 class Export:
     def __init__(self):
-        self.data = loadJson('data/watermark.json')
+        self.data = load_json('data/watermark.json')
         self.surf = pygame.Surface((300, 480), pygame.SRCALPHA)
         self.output_surf = c.canvas.copy()
         self.preview = pygame.transform.smoothscale(c.canvas, (250, 140))
@@ -83,5 +83,5 @@ class Export:
             self.data["type"] = self.watermark_type.text
             self.data["text"] = self.watermark_text.text
             self.data["upscale"] = self.upscale.text
-            saveJson('data/watermark.json', self.data)
+            save_json('data/watermark.json', self.data)
             c.submenu = None

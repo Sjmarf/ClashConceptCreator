@@ -1,7 +1,7 @@
 from scripts import common as c
 import pygame
 from scripts.editor_objects.button import Button
-from scripts.utility.file_manager import saveJson
+from scripts.utility.file_manager import save_json
 
 class SettingLine:
     def __init__(self,text,on,switch_images):
@@ -29,8 +29,8 @@ class Settings:
         self.surf = pygame.Surface((c.width - 250, c.height), pygame.SRCALPHA)
         self.asset_packs_button = Button("Asset packs",width=300)
         self.developer_settings_button = Button("Developer Settings", width=300)
-        self.switch_images = [pygame.image.load('assets/editor_gui/switch_on.png').convert_alpha(),
-                              pygame.image.load('assets/editor_gui/switch_off.png').convert_alpha()]
+        self.switch_images = [pygame.image.load('assets/editor_gui/switch_off.png').convert_alpha(),
+                              pygame.image.load('assets/editor_gui/switch_on.png').convert_alpha()]
 
         settings = [["Developer Mode","dev_mode"]]
         self.settings = []
@@ -68,4 +68,4 @@ class Settings:
         for setting in self.settings:
             if setting[0].event(event,pos):
                 c.settings[setting[1]] = setting[0].on
-                saveJson('data/settings.json',c.settings)
+                save_json('data/settings.json', c.settings)

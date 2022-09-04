@@ -1,7 +1,7 @@
 from scripts import common as c
 import pygame
 
-from scripts.utility.file_manager import loadJson,saveJson,getFileList
+from scripts.utility.file_manager import load_json,save_json,get_file_list
 from scripts.utility.size_element import size_element
 from scripts.editor_objects.button import Button
 from scripts.editor_objects.scrollbar import Scrollbar
@@ -36,8 +36,8 @@ class News:
                                     "Accept": "application/json"})
 
         new = response.json()
-        saveJson('assets/reference/news/news.json',new)
-        saveJson('data/last_news_id', c.menu.new_news_id)
+        save_json('assets/reference/news/news.json', new)
+        save_json('data/last_news_id', c.menu.new_news_id)
         print("Saved new news")
         self.fetching = False
         self.create_surfaces()
@@ -51,7 +51,7 @@ class News:
         fade = pygame.transform.scale(fade, (30, 200))
         fade = pygame.transform.flip(fade, True, False)
 
-        data = loadJson('assets/reference/news/news.json')
+        data = load_json('assets/reference/news/news.json')
         self.articles = []
         self.discord_buttons = []
 
@@ -59,7 +59,7 @@ class News:
             surf = box.copy()
             text_x = 0
 
-            if article[0] is not None and article[0] in getFileList('assets/reference/news/'):
+            if article[0] is not None and article[0] in get_file_list('assets/reference/news/'):
                 surf.blit(remove, (0, 0), special_flags=pygame.BLEND_RGBA_SUB)
                 img = pygame.image.load('assets/reference/news/' + article[0]).convert_alpha()
                 img.blit(cutout, (0, 0), special_flags=pygame.BLEND_RGBA_SUB)

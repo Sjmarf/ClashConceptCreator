@@ -2,7 +2,7 @@ import pygame
 
 from scripts import common as c
 from scripts.editor_objects.button import Button
-from scripts.utility.file_manager import loadJson, saveJson, getFileList
+from scripts.utility.file_manager import load_json, save_json, get_file_list, load_json_base_design
 from scripts.menus.right_click import RightClick
 from scripts.utility import main_menu_actions
 from scripts.utility.scale_image import scale_image
@@ -15,7 +15,7 @@ class NewProject:
         self.title = c.editor_font.render("Choose a template:", True, (200, 200, 205))
         self.blank_surf = pygame.Surface((200, 150), pygame.SRCALPHA)
         self.thumbnails = {}
-        for i in getFileList('assets/template_thumbnails'):
+        for i in get_file_list('assets/template_thumbnails'):
             name = i.replace(".png", "")
             surf = self.blank_surf.copy()
             img = pygame.image.load("assets/template_thumbnails/" + i).convert()
@@ -29,6 +29,8 @@ class NewProject:
     def render(self, surf):
         surf.blit(self.title, (surf.get_width() // 2 - self.title.get_width() // 2, 20))
         surf.blit(self.thumbnails["blank"], (20, 80))
+        if c.settings["dev_mode"]:
+            surf.blit(self.thumbnails["base design"], (250, 80))
 
         x, y = 20, 250
         for row in self.rows:
@@ -43,6 +45,12 @@ class NewProject:
         if rect.collidepoint(pos):
             self.new_project("blank")
             return None
+
+        if c.settings["dev_mode"]:
+            rect = pygame.Rect((250, 80, 200, 150))
+            if rect.collidepoint(pos):
+                self.new_project("base design")
+                return None
 
         x, y = 20, 250
         for row in self.rows:
@@ -61,7 +69,7 @@ class NewProject:
         from shutil import copytree, ignore_patterns
         copytree('templates/' + template, 'projects/' + proj_name, ignore=ignore_patterns(".DS_Store"))
         c.menu.content.project_data.insert(0, proj_name)
-        saveJson('projects/projects.json', c.menu.content.project_data)
+        save_json('projects/projects.json', c.menu.content.project_data)
         c.menu.content.open_project(proj_name, 0)
 
 
@@ -135,7 +143,7 @@ class Move:
         # del data[data.index(self.name)]
 
     def close_menu(self):
-        saveJson('projects/projects.json', c.menu.content.project_data)
+        save_json('projects/projects.json', c.menu.content.project_data)
         c.menu.content.create_rows()
         c.menu.content.submenu = None
 
@@ -196,7 +204,7 @@ class Rename:
                             break
                 move('projects/' + self.old_name, 'projects/' + self.input.text)
 
-            saveJson('projects/projects.json', c.menu.content.project_data)
+            save_json('projects/projects.json', c.menu.content.project_data)
             c.menu.content.create_rows()
             c.menu.content.submenu = None
 
@@ -204,7 +212,7 @@ class Rename:
 class Projects:
     def __init__(self):
         self.title = c.editor_font_large.render("Projects", True, (250, 250, 255))
-        self.project_data = loadJson('projects/projects.json')
+        self.project_data = load_json('projects/projects.json')
         self.new_proj_button = Button('New Project', width=240)
         self.new_folder_button = Button('New Folder', width=240)
 
@@ -275,8 +283,12 @@ class Projects:
     def createRowImage(self, img, title, proj_path):
         text_surf = c.editor_font.render(title, True, (200, 200, 205))
         img.blit(text_surf, (65, 12))
-        icon_name = loadJson(proj_path + '/icon.json')
-        if icon_name is not None:
+        icon_name = load_json(proj_path + '/icon.json')
+        if icon_name == "base design":
+            icon = pygame.image.load('assets/editor_gui/main_menu/base_design_icon.png').convert_alpha()
+            img.blit(icon, (25 - icon.get_width() // 2, 25 - icon.get_height() // 2))
+
+        elif icon_name is not None:
             try:
                 icon = pygame.image.load(proj_path + '/images/' + icon_name).convert_alpha()
             except FileNotFoundError:
@@ -320,7 +332,7 @@ class Projects:
                     print('New folder')
                     folder_name = "Folder " + str(len(self.project_data) + 1)
                     self.project_data.append([folder_name])
-                    saveJson('projects/projects.json', self.project_data)
+                    save_json('projects/projects.json', self.project_data)
                     from os import makedirs, getcwd
                     makedirs(getcwd() + '/projects/' + folder_name)
                     self.create_rows()
@@ -381,17 +393,34 @@ class Projects:
         # Move project to top of list
         data = self.project_data.pop(row_num)
         self.project_data.insert(0, data)
-        saveJson('projects/projects.json', self.project_data)
+        save_json('projects/projects.json', self.project_data)
+
+        # Check project type
+        if 'project_type.json' in get_file_list('projects/' + name):
+            proj_type = load_json('projects/' + name + '/project_type.json')["proj_type"]
+        else:
+            print("No project_type.json found, creating one...")
+            from shutil import copyfile
+            copyfile('templates/blank/project_type.json','projects/' + name + '/project_type.json')
+            proj_type = "menu"
 
         # Load data
         c.project_name = name
-        c.data = loadJson('projects/' + name + '/data.json')
+        if proj_type == "base_design":
+            c.data = load_json_base_design('projects/' + name + '/data.json')
+        else:
+            c.data = load_json('projects/' + name + '/data.json')
 
         supported_versions = c.settings["supported_versions"]
         if c.data["version"] == c.VERSION:
             # Open editor
-            from scripts.menus.menus.editor import Editor
-            c.menu = Editor()
+            if proj_type == "menu":
+                from scripts.menus.menus.editor import Editor
+                c.menu = Editor()
+            elif proj_type == "base_design":
+                from scripts.menus.menus.base_designer import BaseDesigner
+                c.menu = BaseDesigner()
+
         elif c.data["version"] in supported_versions:
             # Show project update screen
             from scripts.menus.menus.project_update_menu import ProjectUpdate

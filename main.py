@@ -1,7 +1,7 @@
 import pygame
 from scripts import common as c
 from scripts.menus.menus.main_menu import MainMenu
-from scripts.utility.file_manager import loadJson
+from scripts.utility.file_manager import load_json
 import ctypes
 
 pygame.init()
@@ -28,7 +28,7 @@ pygame.scrap.init()
 
 c.width, c.height = 900, 600
 c.clock = pygame.time.Clock()
-c.settings = loadJson('data/settings.json')
+c.settings = load_json('data/settings.json')
 
 # You can use the in-game 'version number' option in settings to update the version number everywhere, automatically.
 c.VERSION = c.settings["version"]

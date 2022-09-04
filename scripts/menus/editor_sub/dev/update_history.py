@@ -2,7 +2,7 @@ import pygame
 from scripts import common as c
 from scripts.utility.scale_image import scale_image
 from scripts.editor_objects.button import Button
-from scripts.utility.file_manager import loadJson,saveJson
+from scripts.utility.file_manager import load_json,save_json
 from copy import copy
 
 
@@ -11,7 +11,7 @@ class UpdateHistoryViewer:
         self.surf = pygame.Surface((c.width - 100, c.height - 100), pygame.SRCALPHA)
         self.title = c.editor_font.render("Update Speed History", True, (200, 200, 205))
 
-        self.data = loadJson('projects/'+c.project_name+'/update_speed.json')
+        self.data = load_json('projects/' + c.project_name + '/update_speed.json')
 
         # Show data for the most recent update
         self.last_update_surf = pygame.Surface((300, c.height - 220), pygame.SRCALPHA)
@@ -83,7 +83,7 @@ class UpdateHistoryViewer:
             self.last_update_surf = pygame.Surface((300, c.height - 220), pygame.SRCALPHA)
             self.data["all"] = []
             self.data["last"] = []
-            saveJson('projects/'+c.project_name+'/update_speed.json',self.data)
+            save_json('projects/' + c.project_name + '/update_speed.json', self.data)
             print("Cleared update history for this project")
 
         if self.record_button.click(event,pos):
@@ -92,4 +92,4 @@ class UpdateHistoryViewer:
                 self.record_button = Button("Record updates: On", width=250)
             else:
                 self.record_button = Button("Record updates: Off", width=250)
-            saveJson('projects/' + c.project_name + '/update_speed.json', self.data)
+            save_json('projects/' + c.project_name + '/update_speed.json', self.data)

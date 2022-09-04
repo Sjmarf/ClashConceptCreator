@@ -4,7 +4,7 @@ from scripts.editor_objects.button import Button
 from scripts.editor_objects.submenu_button import SubmenuButton
 from scripts.editor_objects.text_input import TextInput
 from scripts.menus.editor_sub.image_selection import ImageSelection
-from scripts.utility.file_manager import getFileList
+from scripts.utility.file_manager import get_file_list
 from scripts.utility.scale_image import scale_image
 from copy import deepcopy
 
@@ -97,7 +97,7 @@ class ListEntriesEditor:
             self.max_scroll = y-self.scroll-60-(c.height-200)
 
         if self.need_preview:
-            if self.image_name + ".png" in getFileList('projects/' + c.project_name + '/images'):
+            if self.image_name + ".png" in get_file_list('projects/' + c.project_name + '/images'):
                 img = pygame.image.load('projects/' + c.project_name + '/images/' + self.image_name + ".png")
                 self.preview_img = scale_image(img, 80)
                 self.need_preview = False

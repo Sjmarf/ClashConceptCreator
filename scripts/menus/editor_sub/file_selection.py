@@ -1,6 +1,6 @@
 import pygame
 from scripts import common as c
-from scripts.utility.file_manager import getFileList
+from scripts.utility.file_manager import get_file_list
 from _thread import start_new_thread
 
 
@@ -9,7 +9,7 @@ class FileSelection:
         self.path, self.set_path = path, set_path
         self.surf = pygame.Surface((c.width - 100, c.height - 100), pygame.SRCALPHA)
 
-        self.files = getFileList(path)
+        self.files = get_file_list(path)
         self.icons = []
         start_new_thread(self.loadImages, ())
 

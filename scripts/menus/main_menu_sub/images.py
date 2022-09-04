@@ -5,7 +5,7 @@ from scripts.menus.editor_sub.image_selection import ImageSelection
 from _thread import start_new_thread
 from scripts.editor_objects.button import Button
 from scripts.utility.scale_image import scale_image
-from scripts.utility.file_manager import loadJson
+from scripts.utility.file_manager import load_json
 
 
 class Images:
@@ -51,7 +51,7 @@ class Images:
 
             elif self.open_button.click(event,pos):
                 if not self.image_data[4]:
-                    asset_pack_data = loadJson('asset packs/' + self.image_data[3] + '/search_data.json')
+                    asset_pack_data = load_json('asset packs/' + self.image_data[3] + '/search_data.json')
                     from webbrowser import open
                     url = self.image_data[2]
                     if type(url) == list:

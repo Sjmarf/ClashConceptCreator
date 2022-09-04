@@ -2,7 +2,7 @@ import pygame
 
 from scripts import common as c
 from scripts.editor_objects.button import Button
-from scripts.utility.file_manager import loadJson
+from scripts.utility.file_manager import load_json
 
 
 class ProjectUpdate:
@@ -45,6 +45,6 @@ class ProjectUpdate:
                 from scripts.utility.project_updater import update_project
                 update_project('projects/'+self.project_name)
 
-                c.data = loadJson('projects/' + self.project_name + '/data.json')
+                c.data = load_json('projects/' + self.project_name + '/data.json')
                 from scripts.menus.menus.editor import Editor
                 c.menu = Editor()

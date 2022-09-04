@@ -11,7 +11,7 @@ from scripts.menus.main_menu_sub.settings import Settings
 from scripts.menus.main_menu_sub.about import About
 import requests
 from _thread import start_new_thread
-from scripts.utility.file_manager import loadJson, saveJson
+from scripts.utility.file_manager import load_json, save_json
 
 
 class SidebarButton:
@@ -86,7 +86,7 @@ class MainMenu:
                 else:
                     new_id = response.json()
                     print("Loaded news id")
-                    old_id = loadJson('data/last_news_id')
+                    old_id = load_json('data/last_news_id')
                     if old_id != new_id:
                         print("New news! ID:",new_id)
                         self.news_notif = new_id - old_id

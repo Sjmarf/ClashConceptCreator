@@ -1,6 +1,6 @@
 import pygame
 from scripts import common as c
-from scripts.utility.file_manager import saveJson, getFileList
+from scripts.utility.file_manager import save_json, get_file_list
 from scripts.editor_objects.button import Button
 from scripts.editor_objects.small_button import SmallButton
 from scripts.menus.editor_sub.new_element import NewElement
@@ -191,9 +191,9 @@ class BottomBar:
     def save_project(self):
         if c.changed_since_opened:
             c.unsaved_changes = False
-            saveJson('projects/' + c.project_name + '/data.json', c.data)
+            save_json('projects/' + c.project_name + '/data.json', c.data)
             # Delete unused images
-            saved_images = getFileList('projects/' + c.project_name + '/images')
+            saved_images = get_file_list('projects/' + c.project_name + '/images')
             unused_images = list(set(saved_images) - set(c.images_used))
             if len(unused_images) > 0:
                 print("Removing " + str(len(unused_images)) + " unused images...")
@@ -201,7 +201,7 @@ class BottomBar:
                 for file in unused_images:
                     os.remove('projects/' + c.project_name + '/images/' + file)
             # Save icon image
-            saveJson('projects/' + c.project_name + '/icon.json', c.icon_image[0])
+            save_json('projects/' + c.project_name + '/icon.json', c.icon_image[0])
             print("Saved")
             self.feedback_text = ["Saved",20]
             c.last_data,c.undo_store = deepcopy(c.data["el"]),deepcopy(c.data["el"])

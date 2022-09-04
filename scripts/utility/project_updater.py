@@ -1,9 +1,9 @@
 from scripts import common as c
-from scripts.utility.file_manager import loadJson, saveJson
+from scripts.utility.file_manager import load_json, save_json
 
 
 def update_project(name):
-    data = loadJson(name + '/data.json')
+    data = load_json(name + '/data.json')
     if data["version"] in c.settings["supported_versions"]:
         if data["version"] != c.VERSION:
             print("Updating "+name+"...")
@@ -29,7 +29,7 @@ def update_02_to_03(name,data):
             if len(element) < 6:
                 element.append(100)
 
-    saveJson(name + '/data.json', data)
+    save_json(name + '/data.json', data)
     print("Updated to v0.3")
 
 def update_01_to_02(name,data):
@@ -56,5 +56,5 @@ def update_01_to_02(name,data):
     from shutil import copyfile
     copyfile('templates/blank/update_speed.json',name + '/update_speed.json')
 
-    saveJson(name + '/data.json',data)
+    save_json(name + '/data.json', data)
     print("Updated to v0.2")

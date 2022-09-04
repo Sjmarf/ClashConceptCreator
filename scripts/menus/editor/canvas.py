@@ -5,7 +5,7 @@ from _thread import start_new_thread
 from datetime import datetime
 
 from scripts.utility import element_actions
-from scripts.utility.file_manager import saveJson, loadJson
+from scripts.utility.file_manager import save_json, load_json
 
 from scripts.elements.button import renderButton
 from scripts.elements.grid import renderGrid
@@ -115,7 +115,7 @@ class Canvas:
         # Update update_speed log
         # (you can access this by clicking the three dots at the bottom of the editor while in Dev Mode)
         if c.settings["dev_mode"]:
-            data = loadJson('projects/' + c.project_name + '/update_speed.json')
+            data = load_json('projects/' + c.project_name + '/update_speed.json')
             if data["record"]:
                 today = datetime.today()
                 total_time = round(time.time() - start_time, 3)
@@ -125,7 +125,7 @@ class Canvas:
                 # Cap the number of entries
                 if len(data["all"]) > 17:
                     del data["all"][-1]
-                saveJson('projects/' + c.project_name + '/update_speed.json', data)
+                save_json('projects/' + c.project_name + '/update_speed.json', data)
         c.image_store.clear_unused_images()
 
     def render(self):

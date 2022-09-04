@@ -66,11 +66,11 @@ class ChoiceInput:
                     pass
                 else:
                     if self.mode == "images":
-                        from scripts.menus.editor_sub.choice_selection import ChoiceSelection
-                        selection = ChoiceSelection((self.window_pos_x, self.pos[1] + 40),
-                                                    self.asset_path, self.setting_path, width=self.window_width,
-                                                    allow_none=self.allow_none, submenu_layer=self.submenu_layer,
-                                                    icon_size=self.icon_size)
+                        from scripts.menus.editor_sub.icon_selection import IconSelection
+                        selection = IconSelection((self.window_pos_x, self.pos[1] + 40),
+                                                  self.setting_path, width=self.window_width,
+                                                  submenu_layer=self.submenu_layer,
+                                                  icon_size=self.icon_size)
 
                     else:
                         from scripts.menus.editor_sub.button_selection import ButtonSelection

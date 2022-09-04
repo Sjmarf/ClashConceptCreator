@@ -30,8 +30,8 @@ def renderButton(element):
 
         # Icon
         if data[6] is not None:
-            icon = pygame.image.load('assets/elements/icon/' + data[6] + '.png').convert_alpha()
-            icon = scale_image(icon,int(data[5])+10)
+            icon = c.image_store.get_scaled_image('projects/'+c.project_name+ '/images/' + data[6] + '.png',
+                                                  int(data[5])+10)
             if data[4] != "":
                 text_surf2 = pygame.Surface((text_surf.get_width()+icon.get_width(),
                                              max(text_surf.get_height(),icon.get_height())),pygame.SRCALPHA)
