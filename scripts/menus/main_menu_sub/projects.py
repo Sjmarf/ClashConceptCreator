@@ -2,7 +2,7 @@ import pygame
 
 from scripts import common as c
 from scripts.editor_objects.button import Button
-from scripts.utility.file_manager import load_json, save_json, get_file_list, load_json_base_design
+from scripts.utility.file_manager import load_json, save_json, get_file_list
 from scripts.menus.right_click import RightClick
 from scripts.utility import main_menu_actions
 from scripts.utility.scale_image import scale_image
@@ -29,8 +29,6 @@ class NewProject:
     def render(self, surf):
         surf.blit(self.title, (surf.get_width() // 2 - self.title.get_width() // 2, 20))
         surf.blit(self.thumbnails["blank"], (20, 80))
-        if c.settings["dev_mode"]:
-            surf.blit(self.thumbnails["base design"], (250, 80))
 
         x, y = 20, 250
         for row in self.rows:
@@ -284,11 +282,8 @@ class Projects:
         text_surf = c.editor_font.render(title, True, (200, 200, 205))
         img.blit(text_surf, (65, 12))
         icon_name = load_json(proj_path + '/icon.json')
-        if icon_name == "base design":
-            icon = pygame.image.load('assets/editor_gui/main_menu/base_design_icon.png').convert_alpha()
-            img.blit(icon, (25 - icon.get_width() // 2, 25 - icon.get_height() // 2))
 
-        elif icon_name is not None:
+        if icon_name is not None:
             try:
                 icon = pygame.image.load(proj_path + '/images/' + icon_name).convert_alpha()
             except FileNotFoundError:
@@ -406,10 +401,7 @@ class Projects:
 
         # Load data
         c.project_name = name
-        if proj_type == "base_design":
-            c.data = load_json_base_design('projects/' + name + '/data.json')
-        else:
-            c.data = load_json('projects/' + name + '/data.json')
+        c.data = load_json('projects/' + name + '/data.json')
 
         supported_versions = c.settings["supported_versions"]
         if c.data["version"] == c.VERSION:
@@ -417,9 +409,6 @@ class Projects:
             if proj_type == "menu":
                 from scripts.menus.menus.editor import Editor
                 c.menu = Editor()
-            elif proj_type == "base_design":
-                from scripts.menus.menus.base_designer import BaseDesigner
-                c.menu = BaseDesigner()
 
         elif c.data["version"] in supported_versions:
             # Show project update screen

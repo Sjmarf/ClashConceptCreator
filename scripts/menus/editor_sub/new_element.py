@@ -63,8 +63,8 @@ class NewElement:
             "text": [[0, 0], [200, 60], "text", "Text", 25, "centre", [255, 255, 255], "large"],
             # Type, colour, opacity
             "box": [[0, 0], [400, 400], "box", "solid", [206, 201, 195], 100],
-            # Text, font size, align, text colour, font, icon size, line spacing
-            "text block": [[0, 0], [300, 300], "text block", "", 25, "left", [255, 255, 255], "small", 100, 100],
+            # Text, font size, align, text colour, font, icon size, line spacing, emoji
+            "text block": [[0, 0], [300, 300], "text block", "", 25, "left", [255, 255, 255], "small", 100, 100, [[]]],
             # Tabs, selected #, Type
             "tabs": [[0, 0], [700, 100], "tabs", ["Tab1"], 0, "1"],
             # Layout (type, size in %, divider on/off), Items, Empty row (used when a new row is added), image size

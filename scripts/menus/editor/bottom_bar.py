@@ -195,6 +195,10 @@ class BottomBar:
             # Delete unused images
             saved_images = get_file_list('projects/' + c.project_name + '/images')
             unused_images = list(set(saved_images) - set(c.images_used))
+
+            if ".gitkeep" in unused_images:
+                unused_images.remove(".gitkeep")
+
             if len(unused_images) > 0:
                 print("Removing " + str(len(unused_images)) + " unused images...")
                 import os

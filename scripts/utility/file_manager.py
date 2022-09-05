@@ -23,23 +23,6 @@ def load_json(path):
     data = json.load(open(path))
     return data
 
-def load_json_base_design(path):
-    # Replaces lists with tuples (tuples don't work in dicts)
-    data = load_json(path)
-    converted_dict = {}
-    for k, v in data["el"].items():
-        converted_dict[ast.literal_eval(k)] = v
-    data["el"] = converted_dict
-    return data
-
-def save_json_base_design(path, data):
-    # Replaces tuples with lists (JSON can't save tuples)
-    converted_dict = {}
-    for k, v in data["el"].items():
-        converted_dict[str(k)] = v
-    data["el"] = converted_dict
-    save_json(path, data)
-
 def get_file_list(location):
     import os
     path = os.getcwd() + "/" + location

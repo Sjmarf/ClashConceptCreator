@@ -8,27 +8,6 @@ from copy import deepcopy
 
 class ImageStore:
     def __init__(self):
-        icon_list = [("trophy", "🏆"), ("trophy2", "🏺"), ("trophy3","💜"),("xp", "✹"), ("town_hall", "🏛"),
-                     ("builder_potion", "🍷"), ("research_potion", "🔎"),
-                     ("gold", "💰"),("elixir", "💧"),("dark_elixir","🖤"),("builder_gold", "🪙"),
-                     ("builder_elixir", "🩸"),
-                     ("gem", "💎"),("capital_gold", "🪞"), ("raid_medal", "🎖"), ("league_medal","🥇"),
-                     ("donation", "👨"), ("preview", "👁"), ("view","👀"), ("profile", "👤"),
-                     ("raid_log", "📗"), ("war_log", "📕"), ("stats","📈"), ("random", "🎲"), ("stopwatch", "🕰"),
-                     ("war","🤺"),("swords","🔪"),("sword", "🗡"), ("spell", "🍹"), ("siege_machine", "🚗"),
-                     ("challenge","🟧"),("friend","👯"),("edit","🖊"),("request","👥"),("builder","😁"),
-                     ("chat","💬"), ("base_design","📝"),("calendar","🗓"), ("shield","🛡"),("star","🌟"),
-                     ("hammer","🔨"),("clan","🏘"),("world","🌎"),
-                     ("health", "❤"),("damage", "💥"),("attack_speed","💨"),("skeletons","💀"),("deploy","🫡"),
-                     ("info","🟦"),("cross","❌"),("hashtag","🏁"),("share", "👉"),("home","🏠"),
-                     ("arrow_up","🔼"), ("arrrow_down","🔽"),("arrow_left","↞"),("arrow_right","➡"),
-                     ("arrow_back","🔙"),("tick","✅"),("cross2","💔"),("up_down","🔃"), ("play","🟢"),("pause","🛑")]
-        self.icons2 = {}  # key = name
-        self.icons = {}  # key = emoji
-        for name, emoji in icon_list:
-            img = pygame.image.load('assets/elements/icon/' + name + '.png').convert_alpha()
-            img = scale_image(img, 50)
-            self.icons[emoji],self.icons2[name] = img,img
 
         self.background_path, self.background = None, None
         self.element_images = {}
@@ -48,20 +27,24 @@ class ImageStore:
                 img = pygame.image.load('assets/editor_gui/error.png').convert_alpha()
             return img
 
-    def get_scaled_image(self, path, scale):
+    def get_scaled_image(self, path, scale, show_error_image=True):
         name = path+" "+str(scale)
         self.element_images_used.append(name)
         c.images_used.append(path.split("/")[-1])
         if name in self.element_images.keys():
             return self.element_images[name]
         else:
-            print("Loaded scaled image to image store: ", path)
             try:
                 img = pygame.image.load(path).convert_alpha()
                 img = scale_image(img,scale)
                 self.element_images[name] = img
+                print("Loaded scaled image to image store: ", path)
             except FileNotFoundError:
-                img = pygame.image.load('assets/editor_gui/error.png').convert_alpha()
+                if show_error_image:
+                    img = pygame.image.load('assets/editor_gui/error.png').convert_alpha()
+                    img = scale_image(img, scale)
+                else:
+                    return None
             return img
 
     def get_sized_image(self, name, path, size, edge=(100, 100, 100, 100)):

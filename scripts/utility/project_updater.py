@@ -19,11 +19,14 @@ def update_project(name):
 def update_02_to_03(name,data):
     data["version"] = "0.3"
     for element in data["el"]:
-        # Add 'icon size' and 'line spacing' parameters to text block
         if element[2] == "text block":
             if len(element) < 9:
+                # Add 'icon size' and 'line spacing' parameters to text block
                 element.append(100)
                 element.append(100)
+            if len(element) < 10:
+                # Add emoji list to text block
+                element.append([[]])
         # Add 'opacity' parameter to box
         if element[2] == "box":
             if len(element) < 6:
