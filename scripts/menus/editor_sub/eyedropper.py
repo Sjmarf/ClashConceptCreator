@@ -19,8 +19,11 @@ class Eyedropper:
         mouse_x,mouse_y = pygame.mouse.get_pos()
 
         if 0 < mouse_x < self.size[0] and 0 < mouse_y < self.size[1]:
-            self.col = self.canvas.get_at((mouse_x, mouse_y))
-            self.preview.fill(self.col)
+            try:
+                self.col = self.canvas.get_at((mouse_x, mouse_y))
+                self.preview.fill(self.col)
+            except IndexError:
+                pass
 
         c.display.blit(self.preview_outline, (mouse_x - 28, mouse_y + 52))
         c.display.blit(self.preview,(mouse_x-25,mouse_y+55))

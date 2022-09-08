@@ -3,6 +3,6 @@
   "prefix": "https://static.wikia.nocookie.net/clashofclans/images/",
   "suffix": ".png",
   "remove_suffix_if_provided": true,
-  "label_colour": [245, 187, 125],
+  "label_colour": [255, 162, 105],
   "abbreviation": "CoC"
 }

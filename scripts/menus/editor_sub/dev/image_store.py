@@ -15,6 +15,8 @@ class ImageStoreViewer:
                                                     "feature.",
                                                     True, (120, 120, 125))
 
+        self.preview = pygame.Surface((150,150),pygame.SRCALPHA)
+
         self.image_list_surf = pygame.Surface((c.width - 140, c.height - 220), pygame.SRCALPHA)
         y = 0
         for image in c.image_store.element_images.keys():
@@ -34,8 +36,18 @@ class ImageStoreViewer:
         self.surf.blit(self.image_list_surf, (20, 120))
 
         self.clear_button.render(self.surf,(c.width-120-self.clear_button.width,c.height-150))
+        self.surf.blit(self.preview,(c.width-300,150))
 
         c.display.blit(self.surf, (50, 50))
+
+        # Check for hover
+        mouse_pos = pygame.mouse.get_pos()
+        y = 170
+        for image in c.image_store.element_images.keys():
+            rect = pygame.Rect(70,y,25,25)
+            if rect.collidepoint(mouse_pos):
+                self.preview = scale_image(c.image_store.element_images[image],150)
+            y += 25
 
     def event(self, event):
         pos = (0,0)

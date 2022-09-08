@@ -1,0 +1,38 @@
+{
+  "large":[
+    "green",
+    "red",
+    "blue",
+    "light blue",
+    "dark blue",
+    "orange2",
+    "yellow",
+    "navy",
+    "lilac",
+    "purple",
+    "cream",
+    "beige",
+    "orange",
+    "tan",
+    "transparent orange",
+    "transparent purple",
+    "capital white",
+    "capital beige",
+    "capital blue",
+    "capital green",
+    "capital yellow",
+    "clan games white",
+    "clan games yellow",
+    "clan games blue"
+  ],
+
+  "small":[
+    "info",
+    "more",
+    "play",
+    "profile",
+    "small",
+    "view",
+    "war-info"
+  ]
+}

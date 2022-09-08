@@ -25,11 +25,10 @@ class IconSelection:
     def loadImages(self):
         # Used in a thread
         self.icon_surf = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
-        enabled_packs = load_json('asset packs/enabled_packs.json')
         self.icon_surf_height = self.height
 
         x, y = (20, 60)
-        for pack in enabled_packs:
+        for pack in c.enabled_packs:
             icons = load_json('asset packs/' + pack + '/icon_order.json')
             x = 20
             if len(icons) > 0:

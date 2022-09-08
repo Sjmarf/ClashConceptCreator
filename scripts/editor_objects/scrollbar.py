@@ -28,6 +28,7 @@ class Scrollbar:
                 self.slider = size_element('assets/editor_gui/scrollbar/slider.png', (15, slider_height), (0, 0, 10, 10))
             else:
                 # Janky fix
+                self.show = False
                 self.slider_height = self.height
 
     def render(self, surf, pos, mouse_y_offset=0):

@@ -60,7 +60,7 @@ class SubmenuButton:
                         elif self.submenu == "stat list":
                             from scripts.menus.editor_sub.stat_list import StatListEditor
                             c.submenu = StatListEditor()
-                        elif self.submenu == "stat bars":
-                            from scripts.menus.editor_sub.stat_bars import StatBarsEditor
-                            c.submenu = StatBarsEditor()
+                        elif self.submenu == "bars":
+                            from scripts.menus.editor_sub.stat_bars import BarsEditor
+                            c.submenu = BarsEditor()
                     return True

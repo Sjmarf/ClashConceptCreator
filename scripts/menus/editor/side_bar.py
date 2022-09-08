@@ -109,11 +109,13 @@ class SideBar:
                                              ["small", "small2", "large", "large2"], mode="buttons", label="Font"),
                                  TextInput(str(data[4]), [name, 4],
                                            label="Font Size", int_only=True, int_min=10, convert_int=True),
-                                 TextInput(str(data[8]), [name, 8],
-                                           label="Icon Size", int_only=True, int_min=10, convert_int=True),
                                  TextInput(str(data[9]), [name, 9],
                                            label="Line Spacing", int_only=True, int_min=10, convert_int=True),
                                  ]
+
+                if c.settings["dev_mode"]:
+                    self.elements.insert(5, TextInput(str(data[8]), [name, 8],
+                                                      label="Icon Size", int_only=True, int_min=10, convert_int=True))
 
             elif element == "list":
                 self.elements = [SubmenuButton("Edit Layout", "list_layout", width=150),
@@ -142,11 +144,16 @@ class SideBar:
                                  TextInput(str(data[9]), [name, 9], int_only=True, int_min=10, convert_int=True),
                                  ]
 
-            elif element == "stat bars":
-                self.elements = [SubmenuButton("Edit", "stat bars", width=150),
+            elif element == "bars":
+                self.elements = [SubmenuButton("Edit", "bars", width=150),
+                                 ChoiceInput(data[6], [name, 6],
+                                             ["stat", "resource"], mode="buttons", label="Type"),
                                  ColourInput(data[4], [name, 4], label="Bar Colour"),
                                  TextInput(str(data[5]), [name, 5], int_only=True,
-                                           int_min=28, convert_int=True, label="Bar Height")]
+                                           int_min=28, convert_int=True, label="Bar Height"),
+                                 ChoiceInput(data[7], [name, 7],
+                                             ["left", "right"], mode="buttons", label="Align")
+                                 ]
 
             elif element == "box":
                 self.elements = [ChoiceInput(data[3], [name, 3],

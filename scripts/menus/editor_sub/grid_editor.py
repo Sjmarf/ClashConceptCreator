@@ -197,8 +197,11 @@ class GridEditor:
 
         if event.type == pygame.MOUSEBUTTONUP:
             if self.reorder is not None:
-                row = c.data["el"][self.element][3].pop(self.reorder)
-                c.data["el"][self.element][3].insert(self.reorder_num, row)
+                data = c.data["el"][self.element][3]
+                new_data = data.pop(self.reorder)
+                if self.reorder_num > self.reorder:
+                    self.reorder_num -= 1
+                data.insert(self.reorder_num, new_data)
                 self.reorder = None
                 self.create_rows()
             self.reorder = None
