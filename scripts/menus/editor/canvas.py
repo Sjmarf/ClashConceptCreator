@@ -18,7 +18,7 @@ from scripts.elements.list import renderList
 from scripts.elements.chat import renderChat
 from scripts.elements.menu import renderMenu
 from scripts.elements.stat_list import renderStatList
-from scripts.elements.stat_bars import renderStatBars
+from scripts.elements.stat_bars import renderBars
 from scripts.elements.stars import renderStars
 from scripts.elements.player_info import renderPlayerInfo
 
@@ -70,7 +70,7 @@ class Canvas:
                       "list": renderList,
                       "chat": renderChat,
                       "stat list": renderStatList,
-                      "stat bars": renderStatBars,
+                      "bars": renderBars,
                       "player info": renderPlayerInfo,
                       "stars":renderStars}
 

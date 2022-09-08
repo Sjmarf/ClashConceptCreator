@@ -32,6 +32,29 @@ def update_02_to_03(name,data):
             if len(element) < 6:
                 element.append(100)
 
+        elif element[2] == "button":
+            # Rename button types
+            if element[3] == "orange3":
+                element[3] = "orange2"
+            if element[3] == "orange2":
+                element[3] = "transparent orange"
+            if element[3] == "custom":
+                element[3] = "green"
+
+            # Add asset pack prefix
+            if "CoC" not in element[3]:
+                element[3] = "CoC-"+element[3]
+
+        # Rename 'stat bars' element to 'bars' (it now includes non-stat types)
+        elif element[2] == "stat bars":
+            element[2] = "bars"
+            # Add 'type' and 'align' parameters
+            element.append("stat")
+            element.append("left")
+
+            # Remove icon
+            element[6] = None
+
     save_json(name + '/data.json', data)
     print("Updated to v0.3")
 

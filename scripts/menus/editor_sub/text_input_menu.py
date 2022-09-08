@@ -81,7 +81,6 @@ class TextInputMenu:
                 self.line_emojis[self.line_no].append([output, self.cursor_x])
                 self.lines[self.line_no] = line[:self.cursor_x] + ' ' + line[self.cursor_x:]
                 self.cursor_x += 1
-                print(self.cursor_x, self.line_no)
                 return
 
         if event.type == pygame.VIDEORESIZE:
@@ -204,7 +203,6 @@ class TextInputMenu:
 
         else:
             if self.cursor_x != 0:
-                print(self.cursor_x)
                 self.lines[self.line_no] = line[:self.cursor_x - 1] + line[self.cursor_x:]
                 self.cursor_x = max(self.cursor_x - 1, 0)
 

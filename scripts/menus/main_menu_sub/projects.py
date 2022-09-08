@@ -402,6 +402,7 @@ class Projects:
         # Load data
         c.project_name = name
         c.data = load_json('projects/' + name + '/data.json')
+        c.enabled_packs = load_json('asset packs/enabled_packs.json')
 
         supported_versions = c.settings["supported_versions"]
         if c.data["version"] == c.VERSION:

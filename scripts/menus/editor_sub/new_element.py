@@ -1,5 +1,6 @@
 import pygame
 from scripts import common as c
+from scripts.utility.file_manager import get_file_list
 
 
 class NewElement:
@@ -9,7 +10,7 @@ class NewElement:
         self.preview_surf = pygame.Surface((256, 256), pygame.SRCALPHA)
 
         self.names = ['menu', 'box', 'image', 'text', 'text block', 'button', 'grid', 'tabs', 'list', 'chat',
-                      'stat list', 'stat bars', 'player info', 'stars']
+                      'stat list', 'bars', 'player info', 'stars']
         self.icons = []
         for name in self.names:
             self.icons.append((pygame.image.load('assets/editor_gui/icons/' + name + '.png').convert_alpha(),
@@ -71,8 +72,8 @@ class NewElement:
             "list": [[0, 0], [500, 200], "list", [["text", 100, True]], [[["Text"]]], [["Text"]], 100],
             # Type, items (image name, label)
             "icon list": [[0, 0], [300, 100], "icon list", 1, [[None, 1]]],
-            # entries, bar col
-            "stat bars": [[0, 0], [450, 250], "stat bars", [[None,"",0,100]], [144,216,56], 31],
+            # entries, bar col, bar height, type, align
+            "bars": [[0, 0], [450, 250], "bars", [[None,"",0,100]], [144,216,56], 31, "stat", "left"],
             # entries, left col, right col, left font, right font, left font size, right font size
             "stat list": [[0, 0], [450, 250], "stat list", [["stat","value"]],[51, 92, 155],[50,50,50],"small","large",20,20],
             # Items
@@ -92,4 +93,10 @@ class NewElement:
         c.selected = [len(c.data["el"]) - 1, name]
         c.menu.canvas.selection_pos, c.menu.canvas.selection_size = c.data["el"][-1][0:2]
         # Update canvas
+        if name == "button":
+            if "green.png" not in get_file_list("projects/" + c.project_name + '/images'):
+                print("Copying button image to project files")
+                from shutil import copyfile
+                copyfile('assets/elements/button/green.png',
+                         "projects/" + c.project_name + '/images/green.png')
         c.menu.canvas.draw()

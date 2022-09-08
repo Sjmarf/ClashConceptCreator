@@ -8,13 +8,16 @@ class About:
         self.title = c.editor_font_large.render("About", True, (250, 250, 255))
         self.surf = pygame.Surface((c.width - 250, c.height), pygame.SRCALPHA)
         self.text = []
+        sdl = pygame.get_sdl_version()
+        sdl = [str(sdl[0]),str(sdl[1]),str(sdl[2])]
+        sdl = ".".join(sdl)
         text = ["CCC Version: "+c.VERSION,
                 "Version release date: 2nd Sep 2022",
                 "Supported project versions: "+", ".join(c.settings["supported_versions"]),
                 "",
                 "Python Version: "+python_version.split(" ")[0],
                 "Pygame Version: "+pygame.version.ver,
-                "SDL Version: "+str(pygame.get_sdl_version()),
+                "SDL Version: "+sdl,
                 "",
                 "Created by Smarf1. Some images fetched from Clash of Clans Wiki.",
                 "",

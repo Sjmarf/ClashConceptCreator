@@ -50,6 +50,7 @@ class ImageStore:
     def get_sized_image(self, name, path, size, edge=(100, 100, 100, 100)):
         name = name + str(size)
         self.element_images_used.append(name)
+        c.images_used.append(path.split("/")[-1])
         if name in self.element_images.keys():
             return self.element_images[name].copy()
         else:
@@ -57,7 +58,10 @@ class ImageStore:
                 img = size_element(path, size, edge)
                 self.element_images[name] = img
             except FileNotFoundError:
-                img = pygame.image.load('assets/editor_gui/error.png').convert_alpha()
+                img = pygame.Surface(size, pygame.SRCALPHA)
+                error_img = pygame.image.load('assets/editor_gui/error.png').convert_alpha()
+                error_img = scale_image(error_img,size[1])
+                img.blit(error_img,(img.get_width()//2-error_img.get_width()//2,0))
             print("loaded image to image store: " + name)
             return img.copy()
 
@@ -98,7 +102,7 @@ class ImageStore:
                 return img
             elif element_type == "stat_bars":
                 print('loading', col)
-                img = pygame.image.load('assets/elements/stat bars/bar2.png').convert_alpha()
+                img = pygame.image.load('assets/elements/stat bars/stat/bar2.png').convert_alpha()
                 img = tint_image(img, col, original_col=(87, 74, 85))  # (144,216,56)
                 self.element_images[name] = img
                 self.element_images_used.append(name)

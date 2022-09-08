@@ -6,7 +6,7 @@ from scripts.editor_objects.button import Button
 from scripts.editor_objects.small_button import SmallButton
 
 
-class StatBarsEditor:
+class BarsEditor:
     def __init__(self):
         self.surf = pygame.Surface((620, 430), pygame.SRCALPHA)
         self.data = c.data["el"][c.selected[0]][3]
