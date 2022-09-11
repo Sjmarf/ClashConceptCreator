@@ -298,7 +298,7 @@ class Projects:
             self.scrollbar.event(event, pos)
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if self.right_click_shown:
-                    rc_output = self.right_click.event(event)
+                    rc_output = self.right_click.event(event,event.pos)
 
                     if type(rc_output) == str:
                         if rc_output == "delete":

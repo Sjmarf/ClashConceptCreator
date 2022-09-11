@@ -42,9 +42,9 @@ def renderBox(element):
         img.blit(img2,(10,10))
 
     else:
-        img = c.image_store.get_sized_image('box_solid1','assets/elements/box/custom1.png', data[1], (30, 30, 30, 30))
+        img = c.image_store.get_sized_image('box_solid1','assets/elements/box/custom1.png', data[1], (20, 20, 20, 20))
         img.fill(data[4],special_flags=pygame.BLEND_RGB_ADD)
-        outline = c.image_store.get_sized_image('box_solid_2','assets/elements/box/custom2.png', data[1], (30, 30, 30, 30))
+        outline = c.image_store.get_sized_image('box_solid_2','assets/elements/box/custom2.png', data[1], (20, 20, 20, 20))
         # 100, 150, 120
         col = (max(0,200-data[4][0]),max(0,200-data[4][1]),max(0,200-data[4][2]))
         outline.fill(col, special_flags=pygame.BLEND_RGB_SUB)

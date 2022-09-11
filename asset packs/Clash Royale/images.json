@@ -1,9 +1,22 @@
-{"purple banner": ["8/82/Purple_Checks_Frame",
- 0, 0, 600],
- "green banner": ["8/87/Green_Checks_Frame",
- 0, 0, 600],
- "orange banner": ["d/de/Orange_Checks_Frame",
- 0, 0, 600],
+{
+ "purple banner": [
+  "8/82/Purple_Checks_Frame",
+  0,
+  0,
+  600
+ ],
+ "green banner": [
+  "8/87/Green_Checks_Frame",
+  0,
+  0,
+  600
+ ],
+ "orange banner": [
+  "d/de/Orange_Checks_Frame",
+  0,
+  0,
+  600
+ ],
  "wizard": "c/c9/Wizard_card_render",
  "rocket": "f/fd/Rocket_card_render",
  "sparky": "2/26/Sparky_card_render",
@@ -64,6 +77,9 @@
  "rascal's hideout arena": "c/c3/Rascal%27s_Hideout",
  "serenity peak arena": "1/14/Serenity_Peak",
  "legendary arena": "e/ed/Legendary_Arena",
+ "zappies": "b/ba/Zappies_card_render",
+ "royal giant": "b/b4/Royal_Giant_card_render",
+ "goblin cage": "c/c1/Goblin_Cage_card_render",
  "emote king 1": "f/fa/Laughing_King",
  "emote king 2": "1/1a/Thumbs-Up_King",
  "emote king 3": "a/af/Crying_King",
@@ -309,4 +325,5 @@
  "emote barbarian 8": "e/e1/Barbarian_bttf",
  "emote king 11": "8/88/King_luigi",
  "emote king 12": "0/0f/King_wario",
- "emote firecracker 3": "4/42/Firecracker_Santa"}
+ "emote firecracker 3": "4/42/Firecracker_Santa"
+}

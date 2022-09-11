@@ -5,7 +5,10 @@ import pygame
 
 
 class ColourInput:
-    def __init__(self, colour, set_path, width=150, label=None):
+    def __init__(self, colour, set_path, width=150, label=None, submenu_target=1, presets_list=()):
+
+        self.submenu_target = submenu_target
+        self.presets_list = presets_list
 
         src = pygame.image.load('assets/editor_gui/colour_select.png').convert_alpha()
         sheet = SpriteSheet(src, direct=True)
@@ -49,5 +52,13 @@ class ColourInput:
             if event.button == 1:
                 rect = pygame.Rect(self.pos[0], self.pos[1], self.width, 30)
                 if rect.collidepoint(pos):
-                    c.submenu = ColourSelection((c.width - 50 - 510, self.pos[1] + 40), self.colour, self.set_path)
+                    menu = ColourSelection((c.width - 50 - 510, self.pos[1] + 40),
+                                           self.colour, self.set_path, self.submenu_target,
+                                           presets_list=self.presets_list)
+                    if self.submenu_target == 1:
+                        c.submenu = menu
+                    elif self.submenu_target == 2:
+                        c.submenu2 = menu
+                    elif self.submenu_target == "main_menu":
+                        c.menu.content.submenu = menu
                     return True

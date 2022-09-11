@@ -34,8 +34,8 @@ class Slider:
 
 
 class ColourSelection:
-    def __init__(self, pos, colour, set_path):
-        self.pos, self.set_path = pos, set_path
+    def __init__(self, pos, colour, set_path, submenu_target=None, presets_list=()):
+        self.pos, self.set_path, self.submenu_target = pos, set_path, submenu_target
         self.surf = pygame.Surface((510, 200), pygame.SRCALPHA)
         self.colour_preview = pygame.Surface((100, 100), pygame.SRCALPHA)
         self.colour_obj = pygame.Color(colour)
@@ -45,28 +45,28 @@ class ColourSelection:
         hsva = self.colour_obj.hsva
         self.sliders = [Slider(hsva[0] / 3.6), Slider(hsva[1]), Slider(hsva[2])]
 
-        preset_colours = [
-            (255, 255, 255),
-            (0, 0, 0),
-            (132, 204, 44),  # Button green
-            (196, 8, 11),  # Button red (actual 208, 12, 15)
-            (229, 229, 178),  # Button Cream (chat send button)
-            (46, 147, 207),  # Button cyan
-            (158, 229, 106),  # Text green
-            (254, 253, 165),  # Text light yellow
-            (214, 209, 146),  # Chat text player name
-            (119, 119, 111),  # Chat text player role
-            (51, 92, 155),  # Troop description text blue
-            (230, 230, 222),  # Box light beige
-            (206, 201, 195),  # Box dark beige
-            (187, 187, 187),  # Box troop gradient grey
-            (66, 66, 62),  # Chat grey
-            (92, 92, 79),  # Menu header
-            (144, 216, 56),  # Stat bar green
-            (31, 7, 44),  # Magic Item background dark purple
-        ]
+        # preset_colours = [
+        #     (255, 255, 255),
+        #     (0, 0, 0),
+        #     (132, 204, 44),  # Button green
+        #     (196, 8, 11),  # Button red (actual 208, 12, 15)
+        #     (229, 229, 178),  # Button Cream (chat send button)
+        #     (46, 147, 207),  # Button cyan
+        #     (158, 229, 106),  # Text green
+        #     (254, 253, 165),  # Text light yellow
+        #     (214, 209, 146),  # Chat text player name
+        #     (119, 119, 111),  # Chat text player role
+        #     (51, 92, 155),  # Troop description text blue
+        #     (230, 230, 222),  # Box light beige
+        #     (206, 201, 195),  # Box dark beige
+        #     (187, 187, 187),  # Box troop gradient grey
+        #     (66, 66, 62),  # Chat grey
+        #     (92, 92, 79),  # Menu header
+        #     (144, 216, 56),  # Stat bar green
+        #     (31, 7, 44),  # Magic Item background dark purple
+        # ]
         self.presets = []
-        for col in preset_colours:
+        for col in presets_list:
             surf = pygame.Surface((20, 20), pygame.SRCALPHA)
             surf.fill(col)
             self.presets.append((surf, col))
@@ -74,12 +74,20 @@ class ColourSelection:
         self.colour_mode = "HSV"
         self.mode_button = Button("Mode: HSV", width=180)
 
+    def __del__(self):
+        if self.submenu_target == 1:
+            c.menu.side_bar.changeMenu()
+        c.submenu_2_update_value = self.colour_obj
+        c.submenu_2_update = True
+
     def render(self):
         self.surf.fill((50, 50, 55))
 
-        if c.submenu_2_update:
-            self.colour_obj.update(c.submenu_2_update_value)
-            self.update_slider_pos()
+        if self.submenu_target == 1:
+            # I think this is for the colour picker?
+            if c.submenu_2_update:
+                self.colour_obj.update(c.submenu_2_update_value)
+                self.update_slider_pos()
 
         if self.colour_mode == "HSV":
             self.colour_obj.hsva = (self.sliders[0].val * 3.6, self.sliders[1].val, self.sliders[2].val, 100)
@@ -87,7 +95,8 @@ class ColourSelection:
             self.colour_obj.update((
                 self.sliders[0].val * 2.55, self.sliders[1].val * 2.55, self.sliders[2].val * 2.55))
 
-        c.data["el"][self.set_path[0]][self.set_path[1]] = tuple(self.colour_obj)
+        if self.set_path is not None:
+            c.data["el"][self.set_path[0]][self.set_path[1]] = tuple(self.colour_obj)
         self.colour_preview.fill(self.colour_obj)
         self.surf.blit(self.colour_preview, (390, 20))
         hsva = (round(self.colour_obj.hsva[0]), round(self.colour_obj.hsva[1]), round(self.colour_obj.hsva[2]))
@@ -113,7 +122,8 @@ class ColourSelection:
                 x = 20
                 y += 30
 
-        self.eyedropper.render(self.surf, (10, 160))
+        if self.submenu_target == 1:
+            self.eyedropper.render(self.surf, (10, 160))
 
         c.display.blit(self.surf, self.pos)
 
@@ -129,16 +139,18 @@ class ColourSelection:
     def event(self, event):
         m_pos = (0, 0)
 
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_ESCAPE:
-                c.menu.side_bar.changeMenu()
+        if self.submenu_target is None:
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    c.menu.side_bar.changeMenu()
 
         if event.type == pygame.MOUSEBUTTONDOWN:
             m_pos = (event.pos[0] - self.pos[0], event.pos[1] - self.pos[1])
 
-            if self.eyedropper.click(event, m_pos):
-                from scripts.menus.editor_sub.eyedropper import Eyedropper
-                c.submenu2 = Eyedropper()
+            if self.submenu_target == 1:
+                if self.eyedropper.click(event, m_pos):
+                    from scripts.menus.editor_sub.eyedropper import Eyedropper
+                    c.submenu2 = Eyedropper()
 
             if self.mode_button.click(event, m_pos):
                 if self.colour_mode == "HSV":

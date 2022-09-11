@@ -36,7 +36,7 @@ class AssetPacks:
         self.pack_buttons = {}
         for pack in self.packs_list:
             data = load_json('asset packs/' + pack + '/search_data.json')
-            self.pack_buttons[pack] = AssetPackButton(pack, data["label_colour"])
+            self.pack_buttons[pack] = AssetPackButton(pack, data["label_colour"], align="left")
 
         self.picked_up = None
 

@@ -33,6 +33,10 @@ class SideBar:
         self.more_menu = RightClick()
         self.more_menu_shown = False
 
+        self.text_col_presets = (
+                (255, 255, 255), (0, 0, 0), (158, 229, 106), (254, 253, 165), (214, 209, 146), (119, 119, 111),
+                (51, 92, 155))
+
     def changeMenu(self):
         self.prev_selected = c.selected
         self.elements = []
@@ -91,7 +95,8 @@ class SideBar:
 
             elif element == "text":
                 self.elements = [TextInput(data[3], [name, 3], label="Text"),
-                                 ColourInput(data[6], [name, 6], label="Text Colour"),
+                                 ColourInput(data[6], [name, 6], label="Text Colour",
+                                             presets_list=self.text_col_presets),
                                  ChoiceInput(data[5], [name, 5],
                                              ["left", "centre", "right"], mode="buttons", label="Align"),
                                  ChoiceInput(data[7], [name, 7],
@@ -102,7 +107,8 @@ class SideBar:
 
             elif element == "text block":
                 self.elements = [SubmenuButton("Edit Text", "text_block", width=150),
-                                 ColourInput(data[6], [name, 6], label="Text Colour"),
+                                 ColourInput(data[6], [name, 6], label="Text Colour",
+                                             presets_list=self.text_col_presets),
                                  ChoiceInput(data[5], [name, 5],
                                              ["left", "centre", "right"], mode="buttons", label="Align"),
                                  ChoiceInput(data[7], [name, 7],
@@ -134,11 +140,11 @@ class SideBar:
 
             elif element == "stat list":
                 self.elements = [SubmenuButton("Edit", "stat list", width=150),
-                                 ColourInput(data[4], [name, 4], label="Left"),
+                                 ColourInput(data[4], [name, 4], label="Left",presets_list=self.text_col_presets),
                                  ChoiceInput(data[6], [name, 6],
                                              ["small", "large"], mode="buttons"),
                                  TextInput(str(data[8]), [name, 8], int_only=True, int_min=10, convert_int=True),
-                                 ColourInput(data[5], [name, 5], label="Right"),
+                                 ColourInput(data[5], [name, 5], label="Right",presets_list=self.text_col_presets),
                                  ChoiceInput(data[7], [name, 7],
                                              ["small", "large"], mode="buttons"),
                                  TextInput(str(data[9]), [name, 9], int_only=True, int_min=10, convert_int=True),
@@ -148,7 +154,7 @@ class SideBar:
                 self.elements = [SubmenuButton("Edit", "bars", width=150),
                                  ChoiceInput(data[6], [name, 6],
                                              ["stat", "resource"], mode="buttons", label="Type"),
-                                 ColourInput(data[4], [name, 4], label="Bar Colour"),
+                                 ColourInput(data[4], [name, 4], label="Bar Colour",presets_list=((144, 216, 56))),
                                  TextInput(str(data[5]), [name, 5], int_only=True,
                                            int_min=28, convert_int=True, label="Bar Height"),
                                  ChoiceInput(data[7], [name, 7],
@@ -156,13 +162,14 @@ class SideBar:
                                  ]
 
             elif element == "box":
+                col_presets = ((230, 230, 222),(206, 201, 195),(187, 187, 187),(66, 66, 62),(92, 92, 79),(31, 7, 44))
                 self.elements = [ChoiceInput(data[3], [name, 3],
                                              ["solid", "gradient", "highlight", "map"],
                                              mode="buttons", label="Type"),
                                  TextInput(str(data[5]), [name, 5],
                                            label="Opacity", int_only=True, int_min=10, convert_int=True)]
                 if data[3] != "map":
-                    self.elements.insert(1, ColourInput(data[4], [name, 4], label="Colour"))
+                    self.elements.insert(1, ColourInput(data[4], [name, 4], label="Colour",presets_list=col_presets))
 
             elif element == "player info":
 
@@ -232,7 +239,7 @@ class SideBar:
             pos = (event.pos[0] - self.pos[0], event.pos[1] - self.pos[1])
 
             if self.more_menu_shown and c.selected is not None:
-                output = self.more_menu.event(event)
+                output = self.more_menu.event(event, event.pos)
                 if type(output) == str:
                     if output == "delete":
                         element_actions.delete()
@@ -243,6 +250,7 @@ class SideBar:
                     elif output == "move down layer":
                         element_actions.layer_down()
                     self.more_menu_shown = False
+                    return
 
         if c.selected is not None and not c.multi_select:
             if self.advanced_button.click(event, pos):

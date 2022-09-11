@@ -126,8 +126,18 @@ class BottomBar:
 
     def event(self, event):
         pos = (0, 0)
+
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            pos = (event.pos[0] - self.pos[0], event.pos[1] - self.pos[1])
+
+            # Mouse pos readout
+            rect = pygame.Rect(self.size[0] - 10 - self.mouse_pos_text.get_width(), 10,
+                               self.mouse_pos_text.get_width(), self.mouse_pos_text.get_height())
+            if rect.collidepoint(pos):
+                self.mouse_pos_real = not self.mouse_pos_real
+
         if self.right_click is not None:
-            output = self.right_click.event(event)
+            output = self.right_click.event(event,event.pos)
             if output is not None:
                 if output == "image store":
                     from scripts.menus.editor_sub.dev.image_store import ImageStoreViewer
@@ -138,14 +148,6 @@ class BottomBar:
                     c.submenu = UpdateHistoryViewer()
                 self.right_click = None
 
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            pos = (event.pos[0] - self.pos[0], event.pos[1] - self.pos[1])
-
-            # Mouse pos readout
-            rect = pygame.Rect(self.size[0] - 10 - self.mouse_pos_text.get_width(), 10,
-                               self.mouse_pos_text.get_width(), self.mouse_pos_text.get_height())
-            if rect.collidepoint(pos):
-                self.mouse_pos_real = not self.mouse_pos_real
 
         if self.add_button.click(event, pos):
             c.submenu = NewElement((10, self.pos[1] - 50))
@@ -184,9 +186,14 @@ class BottomBar:
 
     def resize(self, size):
         self.size = size
-        self.surf = pygame.Surface(size, pygame.SRCALPHA)
-        self.gradient_img = pygame.image.load('assets/editor_gui/gradient.png').convert_alpha()
-        self.gradient_img = pygame.transform.scale(self.gradient_img, (30, size[1]))
+        try:
+            self.surf = pygame.Surface(size, pygame.SRCALPHA)
+            self.gradient_img = pygame.image.load('assets/editor_gui/gradient.png').convert_alpha()
+            self.gradient_img = pygame.transform.scale(self.gradient_img, (30, size[1]))
+        except pygame.error as e:
+            print("BottomBar resize error")
+            print(e)
+            print("Attempted to scale size to:",size)
 
     def save_project(self):
         if c.changed_since_opened:

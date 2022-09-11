@@ -3,8 +3,10 @@ from scripts.utility.file_manager import load_json, get_file_list
 from scripts.utility.scale_image import scale_image
 from scripts.utility.size_element import size_element
 from scripts.editor_objects.button import Button
+from scripts.editor_objects.asset_pack_button import AssetPackButton
 from scripts.editor_objects.text_input import TextInput
 from scripts.editor_objects.small_button import SmallButton
+from scripts.menus.right_click import RightClick
 from scripts.editor_objects.scrollbar import Scrollbar
 from _thread import start_new_thread
 import pygame
@@ -30,10 +32,14 @@ class ImageWindow:
             self.preview_img = pygame.Surface((250, 250), pygame.SRCALPHA)
 
         self.image_name = image_name
+        self.asset_pack_button = None
         self.image_pack = None
         self.need_preview = False
         self.is_local = False
         self.done_button = Button("Done", width=150)
+
+        self.edit_button = Button("edit", width=180)
+        self.delete_button = SmallButton(icon="bin_button")
 
     def render(self):
         self.surf.fill((50, 50, 55))
@@ -42,9 +48,10 @@ class ImageWindow:
         self.done_button.render(self.surf, (75, c.height - 155))
 
         if self.image_name is not None:
-            name = self.image_name
+            name = self.image_name.title()
             name = name.split("- ")[1]  # Remove asset-pack abbreviation
             if len(name) > 20 and " " in name:
+                # Render file name
                 # Render on two lines if too long
                 words = name.split(" ")
                 half = len(words) // 2
@@ -60,13 +67,25 @@ class ImageWindow:
                 asset_pack_y_offset = 0
 
             if self.image_pack is not None:
-                if self.image_pack == "LOCAL":
+                # Asset Pack Label
+                if self.image_pack == "Local":
                     col = (155, 242, 114)
+                elif self.image_pack == "Clan Badge":
+                    col = (133, 114, 242)
                 else:
                     asset_pack_data = load_json('asset packs/' + self.image_pack + '/search_data.json')
                     col = asset_pack_data["label_colour"]
-                text_surf = c.editor_font.render(self.image_pack, True, col)
-                self.surf.blit(text_surf, (150 - text_surf.get_width() // 2, 340 + asset_pack_y_offset))
+
+                if self.asset_pack_button is None:
+                    self.asset_pack_button = AssetPackButton(self.image_pack, col)
+                if self.asset_pack_button.name != self.image_pack:
+                    self.asset_pack_button = AssetPackButton(self.image_pack, col)
+                self.asset_pack_button.render(self.surf, (40, 340 + asset_pack_y_offset))
+
+            if self.image_pack == "Clan Badge":
+                # Clan Badge Edit & Delete buttons
+                self.edit_button.render(self.surf,(40,380+asset_pack_y_offset))
+                self.delete_button.render(self.surf, (230, 380 + asset_pack_y_offset))
 
         c.display.blit(self.surf, (50, 50))
 
@@ -82,11 +101,12 @@ class ImageWindow:
             self.surf = pygame.Surface((c.width - 100, c.height - 100), pygame.SRCALPHA)
             self.image_selection.resize((c.width - 425, c.height - 150))
 
-        if event.type in {pygame.MOUSEBUTTONDOWN,pygame.MOUSEWHEEL}:
+        if event.type in {pygame.MOUSEBUTTONDOWN, pygame.MOUSEWHEEL}:
             pos = pygame.mouse.get_pos()
             pos = (pos[0] - 50, pos[1] - 50)
 
         output = self.image_selection.event(event, pos)
+        # Load low-res preview image
         if output is not None:
             self.image_name, self.image_pack = output[5] + output[0], output[3]
             self.preview_img = scale_image(output[1], 250)
@@ -97,15 +117,45 @@ class ImageWindow:
             c.menu.canvas.draw()
             c.submenu = None
 
+        if self.image_pack == "Clan Badge":
+            # Delete Clan Badge design
+            if self.delete_button.click(event,pos):
+                # Remove preview image
+                self.need_preview = False
+                self.preview_img = pygame.Surface((250, 250), pygame.SRCALPHA)
+                # Remove files for badge
+                from os import remove
+                name = self.image_name.split("- ")[1]
+                remove('assets/clan_badges/' + name + '.png')
+                remove('assets/clan_badges/' + name + '.json')
+                # Deselect image
+                self.image_name = None
+                # Reload image search
+                self.image_selection.search_num += 1
+                self.image_selection.load_images(self.image_selection.search_num)
+
+            # Edit Clan Badge Design
+            if self.edit_button.click(event,pos):
+                name = self.image_name.split("- ")[1]
+                from scripts.menus.editor_sub.badge_creator import BadgeCreator
+                c.submenu = BadgeCreator(in_editor=True,menu_to_return_to=c.submenu,file_name=name)
+
+###################################################################################
 
 class ImageSelection:
     def __init__(self, size=(200, 200), no_editor=False):
+        self.current_image_data = None
         self.surf = pygame.Surface(size, pygame.SRCALPHA)
         self.surf.fill((45, 45, 50))
         self.pos, self.per_row, self.start_x = (0, 0), 5, 10
         self.size, self.no_editor = size, no_editor
         self.images = []
-        self.search_bar = TextInput("", None, width=size[0] - 40, empty="Search...", no_editor=no_editor)
+
+        self.search_bar = TextInput("", None, width=size[0] - 80, empty="Search...", no_editor=no_editor)
+        self.more_button = SmallButton(icon="more_button")
+        self.scrollbar = Scrollbar()
+        self.right_click = None
+
         self.search_term = ""
         self.extensions = {".png", ".PNG", ".jpg", ".jpeg"}
         self.loading_text = c.editor_font.render("Loading...", True, (150, 150, 155))
@@ -114,7 +164,6 @@ class ImageSelection:
         self.search_num = 0
         self.outline_img = pygame.Surface((56, 56), pygame.SRCALPHA)
         self.image_clicked = None
-        self.scrollbar = Scrollbar()
         pygame.draw.rect(self.outline_img, (255, 255, 255), (0, 0, 56, 56), 3)
 
         self.no_results_text = c.editor_font.render("We couldn't find any results.", True, (200, 200, 205))
@@ -161,11 +210,12 @@ class ImageSelection:
         local = get_file_list(path)
         local = list(filter(lambda x: all(search in x.lower() for search in search_words), local))
         for name in local:
-            img = pygame.image.load(path + "/" + name).convert_alpha()
-            img = scale_image(img, 50)
-            name = name.replace(".png", "")
-            # filename, surface, url, pack name, is local
-            self.images.append([name, img, None, pack_name, True])
+            if ".png" in name:
+                img = pygame.image.load(path + "/" + name).convert_alpha()
+                img = scale_image(img, 50)
+                name = name.replace(".png", "")
+                # filename, surface, url, pack name, is local
+                self.images.append([name, img, None, pack_name, True])
 
     def load_images(self, num):
         self.connection_error = False
@@ -180,7 +230,8 @@ class ImageSelection:
         enabled_packs = load_json('asset packs/enabled_packs.json')
 
         # Load images from local
-        self.load_from_path(search_words, 'local images', "LOCAL")
+        self.load_from_path(search_words, 'local images', "Local")
+        self.load_from_path(search_words, 'assets/clan_badges', "Clan Badge")
         # Load images from URL
 
         for pack in enabled_packs:
@@ -202,7 +253,7 @@ class ImageSelection:
         self.size = size
         self.surf = pygame.Surface(size, pygame.SRCALPHA)
         self.surf.fill((45, 45, 50))
-        self.search_bar = TextInput(self.search_bar.text, None, width=size[0] - 40,
+        self.search_bar = TextInput(self.search_bar.text, None, width=size[0] - 80,
                                     empty="Search...", no_editor=self.no_editor)
 
     def render(self, surf, pos, scrollbar_mouse_y_offset=0):
@@ -210,6 +261,7 @@ class ImageSelection:
         self.surf.fill((45, 45, 50))
 
         self.search_bar.render(self.surf, (20, 20))
+        self.more_button.render(self.surf, (self.size[0] - 50, 20))
 
         self.per_row = (self.size[0] - 50) // 60
         self.start_x = (self.size[0] - self.per_row * 60) // 2
@@ -246,14 +298,22 @@ class ImageSelection:
         if self.connection_error:
             self.surf.blit(self.connection_error_text, (10,
                                                         self.size[1] - self.connection_error_text.get_height() - 10))
+
+        if self.right_click is not None:
+            self.right_click.render(self.surf, (self.size[0] - 50 - 190, 60))
+
         surf.blit(self.surf, pos)
 
     def load_final_image(self, data, keep_actual_size=False):
+        self.current_image_data = data
         name = data[0]
         if data[4]:
-            if data[3] == "LOCAL":
+            if data[3] == "Local":
                 img = pygame.image.load('local images/' + name + ".png")
                 filename_prefix = "LOC- "
+            elif data[3] == "Clan Badge":
+                img = pygame.image.load('assets/clan_badges/' + name + ".png")
+                filename_prefix = "CB- "
             else:
                 asset_pack_data = load_json('asset packs/' + data[3] + '/search_data.json')
                 filename_prefix = asset_pack_data["abbreviation"] + "- "
@@ -287,7 +347,19 @@ class ImageSelection:
 
     def event(self, event, pos):
         pos = (pos[0] - self.pos[0], pos[1] - self.pos[1])
+        # Right-click object
+        if self.right_click is not None:
+            output = self.right_click.event(event, pos)
+            if output is not None:
+                if output == "Create Clan Badge":
+                    from scripts.menus.editor_sub.badge_creator import BadgeCreator
+                    if self.no_editor:
+                        c.menu.content = BadgeCreator(in_editor=False)
+                    else:
+                        self.right_click = None
+                        c.submenu = BadgeCreator(in_editor=True, menu_to_return_to=c.submenu)
 
+        # Search Bar
         if self.search_bar.event(event, pos):
             if self.search_term != self.search_bar.text:
                 self.search_term = self.search_bar.text
@@ -295,6 +367,14 @@ class ImageSelection:
                     self.search_num += 1
                     self.loading = True
                     start_new_thread(self.load_images, (self.search_num,))
+
+        # More Button
+        if self.more_button.click(event, pos):
+            if self.right_click is None:
+                self.right_click = RightClick()
+                self.right_click.set_options(["Create Clan Badge"], width=220)
+            else:
+                self.right_click = None
 
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:
@@ -312,8 +392,10 @@ class ImageSelection:
                                 start_new_thread(self.load_final_image, (data, True))
 
                             data = data.copy()
-                            if data[3] == "LOCAL":
+                            if data[3] == "Local":
                                 data.append("LOC- ")
+                            elif data[3] == "Clan Badge":
+                                data.append("CB- ")
                             else:
                                 asset_pack_data = load_json('asset packs/' + data[3] + '/search_data.json')
                                 data.append(asset_pack_data["abbreviation"] + "- ")

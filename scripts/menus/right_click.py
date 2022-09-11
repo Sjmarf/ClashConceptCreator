@@ -21,13 +21,13 @@ class RightClick:
         self.pos = pos
         surf.blit(self.surf, pos)
 
-    def event(self, event):
+    def event(self, event, pos):
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button in {1, 3}:
                 rect = pygame.Rect(self.pos[0], self.pos[1], self.width, 300)
 
-                if rect.collidepoint(event.pos):
-                    mouse_pos = (event.pos[0] - self.pos[0], event.pos[1] - self.pos[1])
+                if rect.collidepoint(pos):
+                    mouse_pos = (pos[0] - self.pos[0], pos[1] - self.pos[1])
 
                     y = 10
                     for option in self.options:

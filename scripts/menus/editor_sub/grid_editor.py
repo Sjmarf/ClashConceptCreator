@@ -90,7 +90,7 @@ class GridEditor:
                                 if box[0]+'.png' in get_file_list('projects/' + c.project_name + '/images/'):
                                     img = pygame.image.load(
                                         'projects/'+c.project_name+'/images/'+box[0]+'.png').convert_alpha()
-                                    img = scale_image(img, (30, 30))
+                                    img = scale_image(img, 30)
                                     self.cached_images[box[0]] = img
                                 else:
                                     img = None
@@ -194,6 +194,7 @@ class GridEditor:
             self.sidebar = pygame.Surface((420, c.height - 100), pygame.SRCALPHA)
             self.sidebar.fill((45, 45, 50))
             self.image_selection.resize((c.width - 600, c.height - 300))
+            self.create_rows()
 
         if event.type == pygame.MOUSEBUTTONUP:
             if self.reorder is not None:
