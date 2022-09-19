@@ -40,9 +40,10 @@ class Editor:
             canvas = c.canvas_size
         else:
             sidebar_width = 250
-            canvas = (c.width - sidebar_width, ((c.width - sidebar_width) / c.canvas_size[0]) * c.canvas_size[1])
+            canvas = (c.width - sidebar_width,
+                      min(c.height-70,((c.width - sidebar_width) / c.canvas_size[0]) * c.canvas_size[1]))
         c.sizes = {"canvas": canvas,
-                   "bottom": (c.width - sidebar_width, c.height - canvas[1]),
+                   "bottom": (c.width - sidebar_width, max(70,c.height - canvas[1])),
                    "side": (c.width - canvas[0], c.height)}
 
     def render(self):

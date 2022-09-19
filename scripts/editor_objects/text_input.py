@@ -3,27 +3,14 @@ from scripts import common as c
 from scripts.utility.font import FontObject
 from scripts.utility.size_element import size_element
 
-
-def getIntFromText(path):
-    # Used to set button element width to that required by text
-    new_width = len(c.data["el"][path[0]][path[1]]) * 13 + 30
-    old_width = c.data["el"][path[0]][1]
-    if old_width[0] < new_width:
-        c.data["el"][path[0]][1] = [new_width, old_width[1]]
-        c.menu.side_bar.changeMenu()
-
-
 class TextInput:
     def __init__(self, text, path, label=None, width=150, empty=None, int_only=False,
-                 int_min=None, special_func=None, convert_int=False, no_editor=False):
+                 int_min=None, convert_int=False, no_editor=False):
         self.path = path
         self.img, self.pos, self.text, self.empty, self.label = None, (0, 0), text, empty, label
         self.active, self.no_editor = False, no_editor
-        self.int_only, self.int_min, self.function, self.convert_int = int_only, int_min, None, convert_int
+        self.int_only, self.int_min, self.convert_int = int_only, int_min, convert_int
 
-        if special_func is not None:
-            if special_func == "get_int_from_text":
-                self.function = getIntFromText
         if label is not None:
             self.HEIGHT = 60
             self.label_img = c.editor_font.render(label, True, (200, 200, 205))
@@ -94,9 +81,7 @@ class TextInput:
                         self.text = str(self.int_min)
                     elif int(self.text) < self.int_min:
                         self.text = str(self.int_min)
-                # Run special func if included
-                if self.function is not None:
-                    self.function(self.path)
+
                 self.renderText()
                 if not self.no_editor:
                     c.menu.canvas.draw()

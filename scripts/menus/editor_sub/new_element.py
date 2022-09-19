@@ -9,8 +9,8 @@ class NewElement:
         self.surf = pygame.Surface((600, 380), pygame.SRCALPHA)
         self.preview_surf = pygame.Surface((256, 256), pygame.SRCALPHA)
 
-        self.names = ['menu', 'box', 'image', 'text', 'text block', 'button', 'grid', 'tabs', 'list', 'chat',
-                      'stat list', 'bars', 'player info', 'stars']
+        self.names = ['menu', 'box', 'image', 'text', 'text block', 'button', 'grid', 'tabs', 'list', 'bars',
+                      'chat', 'stat list', 'player info', 'stars', 'troop']
         self.icons = []
         for name in self.names:
             self.icons.append((pygame.image.load('assets/editor_gui/icons/' + name + '.png').convert_alpha(),
@@ -54,8 +54,8 @@ class NewElement:
         defaults = {
             # type, text, font size
             "menu": [[0, 0], [750, 750], "menu", "menu_1", "Title", "30"],
-            # Type, text, font size, icon, colour
-            "button": [[0, 0], [220, 60], "button", "green", "Text", "20", None, (132, 204, 44)],
+            # Type, text, font size, icon, colour, arrange
+            "button": [[0, 0], [220, 60], "button", "green", "Text", "20", None, "icon left"],
             # Items, subtitle font size, icon size, icon offset, align, type
             "grid": [[0, 0], [300, 300], "grid", [], 25, 100, [0, 0], "left", "skin"],
             # Image name, image size
@@ -81,7 +81,9 @@ class NewElement:
             # name, clan, image, subtitle, align
             "player info": [[0, 0], [250, 100], "player info", None,"Name","Clan","","left"],
             # number of stars, text, type
-            "stars": [[0, 0], [200, 50], "stars", "3", "", "small"]
+            "stars": [[0, 0], [200, 50], "stars", "3", "", "small"],
+            # entries
+            "troop": [[0, 0], [600, 90], "troop", [[None,"","1"]]],
         }
 
 

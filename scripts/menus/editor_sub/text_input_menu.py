@@ -123,12 +123,15 @@ class TextInputMenu:
             if event.key == pygame.K_RETURN:
 
                 if self.cursor_x == 0 and len(line) != 0 and self.line_no == 0:
+                    # Create a new line
                     self.lines.insert(0, "")
                     self.line_emojis.insert(0, [])
                 else:
+                    # Split line
                     saved = self.lines[self.line_no][self.cursor_x:]
                     self.lines[self.line_no] = self.lines[self.line_no][:self.cursor_x:]
 
+                    # Move emojis
                     first_line, second_line = [], []
 
                     for num, emoji in enumerate(self.line_emojis[self.line_no]):
@@ -138,11 +141,12 @@ class TextInputMenu:
                         else:
                             first_line.append(emoji)
 
-                    self.line_emojis[self.line_no] = second_line
+
+                    self.line_emojis[self.line_no] = first_line
 
                     self.line_no += 1
                     self.lines.insert(self.line_no, saved)
-                    self.line_emojis.insert(0, first_line)
+                    self.line_emojis.insert(self.line_no, second_line)
                 self.cursor_x = 0
 
             elif event.key == pygame.K_RIGHT:
@@ -211,6 +215,7 @@ class TextInputMenu:
                         if emoji[1] == self.cursor_x:
                             del self.line_emojis[self.line_no][num]
                             print("Removed emoji " + emoji[0])
+                            self.move_emojis_backwards()
                             return
 
                 self.move_emojis_backwards()

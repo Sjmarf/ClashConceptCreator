@@ -49,7 +49,7 @@ class Images:
             # Right side
             self.download_button.render(self.surf, (centre + 100, 130))
             self.download_button2.render(self.surf, (centre + 100, 170))
-            if not self.image_data[4]:
+            if self.image_data[4] == "online":
                 self.open_button.render(self.surf, (centre + 100, 210))
 
         # Image selection box

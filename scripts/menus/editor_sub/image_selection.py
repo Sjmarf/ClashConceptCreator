@@ -35,7 +35,6 @@ class ImageWindow:
         self.asset_pack_button = None
         self.image_pack = None
         self.need_preview = False
-        self.is_local = False
         self.done_button = Button("Done", width=150)
 
         self.edit_button = Button("edit", width=180)
@@ -202,11 +201,11 @@ class ImageSelection:
                           (25 - img.get_width() // 2 + size[0] // 8, 50 - img.get_height() + size[1] // 8))
             # filename, surface, url, pack name, is local
             fancy_name = name.title()
-            self.images.append([fancy_name, new_surf, data[name], pack_name, False])
+            self.images.append([fancy_name, new_surf, data[name], pack_name, "online"])
 
         return None
 
-    def load_from_path(self, search_words, path, pack_name):
+    def load_from_path(self, search_words, path, pack_name, mode="local"):
         local = get_file_list(path)
         local = list(filter(lambda x: all(search in x.lower() for search in search_words), local))
         for name in local:
@@ -215,7 +214,7 @@ class ImageSelection:
                 img = scale_image(img, 50)
                 name = name.replace(".png", "")
                 # filename, surface, url, pack name, is local
-                self.images.append([name, img, None, pack_name, True])
+                self.images.append([name, img, None, pack_name, mode])
 
     def load_images(self, num):
         self.connection_error = False
@@ -237,6 +236,7 @@ class ImageSelection:
         for pack in enabled_packs:
             if pack != ".gitkeep":
                 self.load_from_path(search_words, 'asset packs/' + pack + '/local', pack)
+                self.load_from_path(search_words, 'asset packs/' + pack + '/icons', pack, mode="icon")
                 if not self.connection_error:
                     data = load_json('asset packs/' + pack + '/search_data.json')
                     output = self.load_from_json(num, search_words, pack,
@@ -307,7 +307,7 @@ class ImageSelection:
     def load_final_image(self, data, keep_actual_size=False):
         self.current_image_data = data
         name = data[0]
-        if data[4]:
+        if data[4] != "online":
             if data[3] == "Local":
                 img = pygame.image.load('local images/' + name + ".png")
                 filename_prefix = "LOC- "
@@ -317,7 +317,11 @@ class ImageSelection:
             else:
                 asset_pack_data = load_json('asset packs/' + data[3] + '/search_data.json')
                 filename_prefix = asset_pack_data["abbreviation"] + "- "
-                img = pygame.image.load('asset packs/' + data[3] + '/local/' + name + ".png")
+                if data[4] == "local":
+                    folder_name = "local"
+                else:
+                    folder_name = "icons"
+                img = pygame.image.load('asset packs/' + data[3] + '/'+folder_name+'/' + name + ".png")
         else:
             asset_pack_data = load_json('asset packs/' + data[3] + '/search_data.json')
             if type(data[2]) != str:

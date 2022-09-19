@@ -14,9 +14,9 @@ def renderTextBlock(element):
     temp_font = font.Font('assets/fonts/'+font_name+'.ttf', data[4])
 
     if font_name == "small":
-        gap_size = " "*int(6*data[8]/100)
-    else:
         gap_size = " "*int(5*data[8]/100)
+    else:
+        gap_size = " "*int(4*data[8]/100)
 
     y = 10
     for emoji_list,line in zip(data[10],text):
@@ -36,13 +36,14 @@ def renderTextBlock(element):
         new_surf.blit(text_surf, (start_x, y))
 
         for emoji in emoji_list:
-            x = temp_font.size(line[:emoji[1]])[0]
-            x += line[:emoji[1]].count(" ") * data[4]*(11/25)*((data[4]**-0.5)/(25**-0.5))
-            # Font size 25 should equal 11
+            space_count = line[:emoji[1]].count(" ")
+            line3 = line.replace(" ", " ")
+            x = 8+temp_font.size(line3[:emoji[1]]+space_count*gap_size[:-1])[0]
+
             img = c.image_store.get_scaled_image(
                 "projects/" + c.project_name + "/images/" + emoji[0] + ".png", data[4]*data[8]/100)
             if img is not None:
-                new_surf.blit(img, ((x*data[8]/100)+10, y+data[4]//2-((data[4]-2)*data[8]/100)//2+5))
+                new_surf.blit(img, (start_x+x, y+data[4]//2-((data[4]-2)*data[8]/100)//2+5))
 
         y += (data[4]+5)*data[9]/100
 

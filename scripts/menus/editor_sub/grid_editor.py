@@ -261,6 +261,7 @@ class GridEditor:
                                 # Delete button
                                 rect = pygame.Rect(360, y + 17, 30, 30)
                                 if rect.collidepoint(mouse_pos):
+                                    self.edit = None
                                     del c.data["el"][self.element][3][row_num]
                                     self.create_rows()
                                 # Reorder button

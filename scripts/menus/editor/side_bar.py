@@ -35,7 +35,7 @@ class SideBar:
 
         self.text_col_presets = (
                 (255, 255, 255), (0, 0, 0), (158, 229, 106), (254, 253, 165), (214, 209, 146), (119, 119, 111),
-                (51, 92, 155))
+                (51, 92, 155), (232,91,85), (234, 204, 202))
 
     def changeMenu(self):
         self.prev_selected = c.selected
@@ -58,19 +58,17 @@ class SideBar:
                                            label="Font Size", int_only=True, int_min=10)]
 
             elif element == "button":
-                self.elements = [FileInput(data[3], None, None, mode="button_type"),
+                self.elements = [SubmenuButton("Change Type","button_type", width=150),
 
-                                 TextInput(data[4], [name, 4],
-                                           label="Label", special_func="get_int_from_text"),
+                                 TextInput(data[4], [name, 4], label="Label"),
 
                                  TextInput(data[5], [name, 5],
                                            label="Font Size", int_only=True, int_min=10),
 
                                  ChoiceInput(data[6], [c.selected[0], 6], 'assets/elements/icon', label="Icon",
-                                             window_width=600, allow_none=True, icon_size=30)]
-
-                if data[3] == "custom":
-                    self.elements.insert(1, ColourInput(data[7], [name, 7], label="Colour"))
+                                             window_width=600, allow_none=True, icon_size=30),
+                                 ChoiceInput(data[7], [name, 7],
+                                             ["icon left", "icon top"], mode="buttons", label="Arrange")]
 
             elif element == "grid":
                 self.elements = [SubmenuButton("Edit Boxes", "grid", width=150),
@@ -139,7 +137,7 @@ class SideBar:
                 self.elements = [SubmenuButton("Messages", "chat", width=150)]
 
             elif element == "stat list":
-                self.elements = [SubmenuButton("Edit", "stat list", width=150),
+                self.elements = [SubmenuButton("Edit", "stat_list", width=150),
                                  ColourInput(data[4], [name, 4], label="Left",presets_list=self.text_col_presets),
                                  ChoiceInput(data[6], [name, 6],
                                              ["small", "large"], mode="buttons"),
@@ -186,6 +184,9 @@ class SideBar:
                                              ["0", "1", "2", "3"], mode="buttons", label="Number"),
                                  TextInput(data[4], [name, 4], label="Damage")]
 
+            elif element == "troop":
+                self.elements = [SubmenuButton("Edit", "troop", width=150, path=[name, 3])]
+
             self.advanced_elements = [TextInput(str(data[0][0]), [name, 0, 0],
                                                 label="Pos x", int_only=True, int_min=0, convert_int=True),
                                       TextInput(str(data[0][1]), [name, 0, 1],
@@ -195,6 +196,7 @@ class SideBar:
                                       TextInput(str(data[1][1]), [name, 1, 1],
                                                 label="Height", int_only=True, int_min=55, convert_int=True)
                                       ]
+
 
     def render(self, main_pos):
         self.pos = main_pos

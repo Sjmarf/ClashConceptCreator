@@ -1,6 +1,6 @@
 # ClashConceptCreator
 Discord Server: https://discord.gg/pKRYZ4djWe
-
+![Concept creator](https://preview.redd.it/53cdoxszr0l91.png?width=1012&format=png&auto=webp&s=0a8be056dfe952be8eacdfa6c35f7978c95647a2)
 -------------------
 Windows installation instructions
 -------------------

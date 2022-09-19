@@ -1,4 +1,5 @@
 from scripts import common as c
+from copy import deepcopy
 
 
 def layer_up():
@@ -31,7 +32,7 @@ def delete():
 
 
 def duplicate():
-    new = c.data["el"][c.selected[0]].copy()
+    new = deepcopy(c.data["el"][c.selected[0]])
     c.data["el"].append(new)
     c.selected[0] = len(c.data["el"]) - 1
     c.menu.side_bar.changeMenu()

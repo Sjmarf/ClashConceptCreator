@@ -57,10 +57,16 @@ class SubmenuButton:
                         elif self.submenu == "chat":
                             from scripts.menus.editor_sub.chat_editor import ChatEditor
                             c.submenu = ChatEditor()
-                        elif self.submenu == "stat list":
+                        elif self.submenu == "stat_list":
                             from scripts.menus.editor_sub.stat_list import StatListEditor
                             c.submenu = StatListEditor()
                         elif self.submenu == "bars":
                             from scripts.menus.editor_sub.stat_bars import BarsEditor
                             c.submenu = BarsEditor()
+                        elif self.submenu == "troop":
+                            from scripts.menus.editor_sub.troop_editor import TroopEditor
+                            c.submenu = TroopEditor()
+                        elif self.submenu == "button_type":
+                            from scripts.menus.editor_sub.button_type import ButtonTypeSelector
+                            c.submenu = ButtonTypeSelector()
                     return True

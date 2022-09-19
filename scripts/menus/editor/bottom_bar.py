@@ -12,7 +12,6 @@ from copy import deepcopy
 class BottomBar:
     def __init__(self, size):
         c.multi_select_elements = []
-        self.mouse_pos_text = None
         self.size, self.surf, self.gradient_img, self.pos = None, None, None, (0, 0)
         self.resize(size)
         self.save_button = Button("Save", width=140)
@@ -20,7 +19,6 @@ class BottomBar:
         self.quit_button = Button("Quit", width=140)
 
         self.keybind_font = pygame.font.SysFont("Verdana", 15)
-        self.mouse_pos_text = pygame.Surface((1, 1))
         self.key_img = pygame.image.load("assets/editor_gui/keys/blank.png").convert_alpha()
         self.key_shift_img = pygame.image.load("assets/editor_gui/keys/shift.png").convert_alpha()
         self.keybind_list, self.previous_kbl = None, None
@@ -31,7 +29,6 @@ class BottomBar:
         self.select_button = SmallButton(icon="select_button")
         self.more_button = SmallButton(icon="more_button")
 
-        self.mouse_pos_real = True
         self.feedback_text = [None, 0]  # Text, timer (in ticks)
         self.right_click = None
 
@@ -42,8 +39,8 @@ class BottomBar:
                         [["X"], "Snap X axis"], [["Y"], "Snap Y axis"]]
 
         elif self.keybind_list == "select":
-            keybinds = [[["M"],"Move"],[["shift","D"],"Duplicate"],[["X"],"Delete"],[["."], "Bring forward"],
-                        [[","],"Send Backward"]]
+            keybinds = [[["M"], "Move"], [["shift", "D"], "Duplicate"], [["X"], "Delete"], [["."], "Bring forward"],
+                        [[","], "Send Backward"]]
 
         if self.keybind_list is not None:
             text_surf = self.keybind_font.render("Keybinds:", True, (170, 170, 175))
@@ -87,12 +84,16 @@ class BottomBar:
         self.surf.fill((40, 40, 45))
         self.surf.blit(self.gradient_img, (self.size[0] - 30, 0))
 
-        if self.size[1] < 170:
+        if self.size[1] < 100:
+            self.add_button.render(self.surf, (10, self.size[1] // 2 - 15))
+            self.save_button.render(self.surf, (160, self.size[1] // 2 - 15))
+            self.export_button.render(self.surf, (310, self.size[1] // 2 - 15))
+            self.quit_button.render(self.surf, (460, self.size[1] // 2 - 15))
+        elif self.size[1] < 170:
             self.add_button.render(self.surf, (10, self.size[1] - 90))
             self.save_button.render(self.surf, (160, self.size[1] - 90))
             self.export_button.render(self.surf, (10, self.size[1] - 50))
             self.quit_button.render(self.surf, (160, self.size[1] - 50))
-            self.surf.blit(self.keybind_surf, (330, 10))
         else:
             self.add_button.render(self.surf, (10, 10))
             self.save_button.render(self.surf, (10, self.size[1] - 130))
@@ -100,29 +101,35 @@ class BottomBar:
             self.quit_button.render(self.surf, (10, self.size[1] - 50))
             self.surf.blit(self.keybind_surf, (160, 10))
 
-        if c.settings["dev_mode"]:
-            self.more_button.render(self.surf, (self.size[0] - 40, self.size[1] - 80))
-        self.select_button.render(self.surf, (self.size[0] - 40, self.size[1] - 40))
+        if self.size[1] < 100:
+            if c.settings["dev_mode"]:
+                self.more_button.render(self.surf, (self.size[0] - 80, self.size[1] // 2 - 15))
+            self.select_button.render(self.surf, (self.size[0] - 40, self.size[1] // 2 - 15))
+        else:
+            if c.settings["dev_mode"]:
+                self.more_button.render(self.surf, (self.size[0] - 40, self.size[1] - 80))
+            self.select_button.render(self.surf, (self.size[0] - 40, self.size[1] - 40))
 
-        pos = pygame.mouse.get_pos()
-        if not self.mouse_pos_real:
-            pos = (int(pos[0] // c.menu.canvas.scale_factor), int(pos[1] // c.menu.canvas.scale_factor))
-        self.mouse_pos_text = c.editor_font.render(str(pos[0]) + "," + str(pos[1]), True, (100, 100, 105))
-        self.surf.blit(self.mouse_pos_text, (self.size[0] - 10 - self.mouse_pos_text.get_width(), 10))
-
-        fps_text = c.editor_font.render(str(c.fps), True, (100, 100, 105))
-        self.surf.blit(fps_text, (self.size[0] - 10 - fps_text.get_width(), 40))
+        if self.size[1] >= 100:
+            # FPS Text
+            fps_text = c.editor_font.render(str(c.fps), True, (100, 100, 105))
+            self.surf.blit(fps_text, (self.size[0] - 10 - fps_text.get_width(), 10))
 
         if self.feedback_text[0] is not None:
-            text_surf = c.editor_font.render(self.feedback_text[0],True,(200,200,205))
-            self.surf.blit(text_surf,(self.size[0]-50-text_surf.get_width(),self.size[1]-40))
-            self.feedback_text[1] -= 60/c.fps
+            x_offset = 50
+            y_pos = self.size[1] - 40
+            if c.settings["dev_mode"] and self.size[1] < 100:
+                x_offset = 100
+                y_pos = self.size[1] // 2 - 15
+            text_surf = c.editor_font.render(self.feedback_text[0], True, (200, 200, 205))
+            self.surf.blit(text_surf, (self.size[0] - text_surf.get_width() - x_offset, y_pos))
+            self.feedback_text[1] -= 60 / c.fps
             if self.feedback_text[1] < 0:
                 self.feedback_text[0] = None
 
         c.display.blit(self.surf, main_pos)
         if self.right_click is not None:
-            self.right_click.render(c.display,(main_pos[0]+self.size[0]-310,main_pos[1]+self.size[1]-140))
+            self.right_click.render(c.display, (main_pos[0] + self.size[0] - 310, main_pos[1] + self.size[1] - 140))
 
     def event(self, event):
         pos = (0, 0)
@@ -130,14 +137,8 @@ class BottomBar:
         if event.type == pygame.MOUSEBUTTONDOWN:
             pos = (event.pos[0] - self.pos[0], event.pos[1] - self.pos[1])
 
-            # Mouse pos readout
-            rect = pygame.Rect(self.size[0] - 10 - self.mouse_pos_text.get_width(), 10,
-                               self.mouse_pos_text.get_width(), self.mouse_pos_text.get_height())
-            if rect.collidepoint(pos):
-                self.mouse_pos_real = not self.mouse_pos_real
-
         if self.right_click is not None:
-            output = self.right_click.event(event,event.pos)
+            output = self.right_click.event(event, event.pos)
             if output is not None:
                 if output == "image store":
                     from scripts.menus.editor_sub.dev.image_store import ImageStoreViewer
@@ -146,8 +147,11 @@ class BottomBar:
                 elif output == "update speed history":
                     from scripts.menus.editor_sub.dev.update_history import UpdateHistoryViewer
                     c.submenu = UpdateHistoryViewer()
-                self.right_click = None
-
+                try:
+                    self.right_click = None
+                except AttributeError as e:
+                    print("Bottom-bar right click error")
+                    print(e)
 
         if self.add_button.click(event, pos):
             c.submenu = NewElement((10, self.pos[1] - 50))
@@ -177,10 +181,11 @@ class BottomBar:
                 c.menu = MainMenu()
 
         if c.settings["dev_mode"]:
-            if self.more_button.click(event,pos):
+            if self.more_button.click(event, pos):
                 if self.right_click is None:
                     self.right_click = RightClick()
-                    self.right_click.set_options(["update speed history","image store"],width=250,bg_col=(50,50,55))
+                    self.right_click.set_options(["update speed history", "image store"], width=250,
+                                                 bg_col=(50, 50, 55))
                 else:
                     self.right_click = None
 
@@ -193,7 +198,7 @@ class BottomBar:
         except pygame.error as e:
             print("BottomBar resize error")
             print(e)
-            print("Attempted to scale size to:",size)
+            print("Attempted to scale size to:", size)
 
     def save_project(self):
         if c.changed_since_opened:
@@ -214,5 +219,5 @@ class BottomBar:
             # Save icon image
             save_json('projects/' + c.project_name + '/icon.json', c.icon_image[0])
             print("Saved")
-            self.feedback_text = ["Saved",20]
-            c.last_data,c.undo_store = deepcopy(c.data["el"]),deepcopy(c.data["el"])
+            self.feedback_text = ["Saved", 20]
+            c.last_data, c.undo_store = deepcopy(c.data["el"]), deepcopy(c.data["el"])

@@ -11,12 +11,23 @@ def update_project(name):
                 update_01_to_02(name, data)
             if data["version"] == "0.2":
                 update_02_to_03(name, data)
+            if data["version"] == "0.3":
+                update_03_to_04(name, data)
     else:
         print("ERROR: Attempted to convert project, but version number is unsupported")
         from scripts.menus.menus.project_load_error import ProjectLoadError
         c.menu = ProjectLoadError(ver=c.data["version"], supported="supported_versions")
 
+def update_03_to_04(name, data):
+    data["version"] = "0.4"
+    for element in data["el"]:
+        if element[2] == "button":
+            # Replace 'colour' parameter with 'arrange' parameter
+            if type(element[7]) in (list, tuple):
+                element[7] = 'icon left'
 
+    save_json(name + '/data.json', data)
+    print("Updated to v0.4")
 def update_02_to_03(name, data):
     data["version"] = "0.3"
     for element in data["el"]:

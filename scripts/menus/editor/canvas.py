@@ -21,6 +21,7 @@ from scripts.elements.stat_list import renderStatList
 from scripts.elements.stat_bars import renderBars
 from scripts.elements.stars import renderStars
 from scripts.elements.player_info import renderPlayerInfo
+from scripts.elements.troop import renderTroop
 
 
 class Canvas:
@@ -72,7 +73,8 @@ class Canvas:
                       "stat list": renderStatList,
                       "bars": renderBars,
                       "player info": renderPlayerInfo,
-                      "stars":renderStars}
+                      "stars":renderStars,
+                      "troop":renderTroop}
 
         draw_dark = False
         for element in range(len(data)):
@@ -129,8 +131,11 @@ class Canvas:
         c.image_store.clear_unused_images()
 
     def render(self):
-        self.scale_factor = self.size[0] / c.canvas.get_width()
-        canvas = pygame.transform.smoothscale(c.canvas, (self.size[0] * self.zoom, self.size[1] * self.zoom))
+        self.scale_factor = self.size[1] / c.canvas.get_height()
+        # Width is calculated to always be proportional to width. This is necessary for when the bottom-bar becomes
+        # the limiting factor for size (e.g. on wide monitors)
+        width = (self.size[1] * self.zoom)/c.canvas_size[1]*c.canvas_size[0]
+        canvas = pygame.transform.smoothscale(c.canvas, (width, self.size[1] * self.zoom))
         abs_pos = pygame.mouse.get_pos()
         sf = self.scale_factor
         offset = (self.selection_size[0] // 2, self.selection_size[1] // 2)
